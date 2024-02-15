@@ -21,13 +21,8 @@ intervals = pd.interval_range(0, raw_data.max(), BINS)
 print(intervals)
 
 mean = raw_data.mean()
-std = raw_data.std()
-
-se_05 = std / math.sqrt(5)
-se_20 = std / math.sqrt(20)
 
 print("mean (μ): ", mean)
-print("std (σ): ", std)
 
 # print("std 5: ", sample_mean_05["income"].std())
 # print("std 20: ", sample_mean_20["income"].std())
@@ -63,7 +58,7 @@ N00, bins00, patches00 = axes[0,0].hist(
     rwidth=0.8,
     label='Data Density'
 )
-axes[0,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
+axes[0,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}')
 
 ####### [1,0] #######
 N10, bins10, patches10 = axes[1,0].hist(
@@ -73,25 +68,25 @@ N10, bins10, patches10 = axes[1,0].hist(
     rwidth=0.8, 
     label='Data Density'
 )
-axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
+axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}')
 
 ####### [0,1] #######
-line05, = axes[0,1].plot([], color='r', label='Sample Mean (n=5)') 
+line03, = axes[0,1].plot([], color='r', label='Sample Mean (n=3)')
 # Set the x-axis and y-axis limits to 100 
 axes[0,1].set_xlim(0, 1000) 
 axes[0,1].set_ylim(0, raw_data.max()) 
 
-text05 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
-text05_SE = axes[0,1].text(25, 5_000, f'Standard Error (SE5) = {se_05:.2f}')
+text03 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
+text05_SEE = axes[0,1].text(25, 5_000, f'')
 
 ####### [1,1] #######
-line20, = axes[1,1].plot([], color='g', label='Sample Mean (n=20)') 
+line50, = axes[1,1].plot([], color='g', label='Sample Mean (n=50)') 
 # Set the x-axis and y-axis limits to 100 
 axes[1,1].set_xlim(0, 1000) 
 axes[1,1].set_ylim(0, raw_data.max()) 
 
-text20 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
-text20_SE = axes[1,1].text(25, 5_000, f'Standard Error (SE20) = {se_20:.2f}')
+text50 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
+text50_SEE = axes[1,1].text(25, 5_000, f'')
 
 ####### Legends #######
 
@@ -100,87 +95,99 @@ axes[1,0].legend(loc="upper right")
 axes[0,1].legend(loc="lower right")
 axes[1,1].legend(loc="lower right")
 
-sample_mean_05 = pd.DataFrame(columns = ['mean_05'])
-sample_mean_20 = pd.DataFrame(columns = ['mean_20'])
+sample_mean_03 = pd.DataFrame(columns = ['mean_03'])
+sample_mean_50 = pd.DataFrame(columns = ['mean_50'])
 
-X_05 = np.linspace(math.floor(mean - 4*se_05), math.ceil(mean + 4*se_05), 400)
-# https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-PDF_05 = stats.norm(loc=mean, scale=se_05).pdf(X_05)
-
-X_20 = np.linspace(math.floor(mean - 4*se_20), math.ceil(mean + 4*se_20), 400)
-# https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-PDF_20 = stats.norm(loc=mean, scale=se_20).pdf(X_20)
-
-Z_X = np.linspace(-4, 4, 400)
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-Z_PDF = stats.norm(loc=0, scale=1).pdf(Z_X)
+T_X = np.linspace(-5, 5, 600)
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html
+T_PDF_3 = stats.t.pdf(T_X, 2,loc=-1,scale=1)
+T_PDF_49 = stats.t.pdf(T_X, 49,loc=1,scale=1)
 
 # https://www.geeksforgeeks.org/dynamic-visualization-using-python/
 for i in range(1000): 
-    sample_05 = raw_data.sample(5)
-    sample_20 = raw_data.sample(20)
+    sample_03 = raw_data.sample(3)
+    sample_50 = raw_data.sample(50)
 
-    bins = [intervals.get_loc(value) for value in sample_05.values]
+    see_03 = sample_03.std() / math.sqrt(3)
+    see_50 = sample_50.std() / math.sqrt(50)
+
+    if see_03 == 0 or see_50 == 0:
+        continue
+
+    print(see_03, see_50)
+
+    X_03 = np.linspace(math.floor(mean - 4*see_03), math.ceil(mean + 4*see_03), 400)
+    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
+    PDF_03 = stats.t.pdf(x=X_03, df=2, loc=mean, scale=see_03)
+
+    X_50 = np.linspace(math.floor(mean - 4*see_50), math.ceil(mean + 4*see_50), 400)
+    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
+    PDF_50 = stats.t.pdf(x=X_50, df=49, loc=mean, scale=see_50)
+
+    bins = [intervals.get_loc(value) for value in sample_03.values]
     for j in range(len(patches00)):
         patches00[j].set_facecolor('r' if j in bins else 'b')
 
-    bins = [intervals.get_loc(value) for value in sample_20.values]
+    bins = [intervals.get_loc(value) for value in sample_50.values]
     for j in range(len(patches10)):
         patches10[j].set_facecolor('g' if j in bins else 'b')
 
     # https://www.geeksforgeeks.org/how-to-add-one-row-in-an-existing-pandas-dataframe/
-    sample_mean_05.loc[i] = [sample_05.mean()]
-    line05.set_data(sample_mean_05.index.values, sample_mean_05['mean_05'].values)
+    sample_mean_03.loc[i] = [sample_03.mean()]
+    line03.set_data(sample_mean_03.index.values, sample_mean_03.values)
 
-    sample_mean_20.loc[i] = [sample_20.mean()]
-    line20.set_data(sample_mean_20.index.values, sample_mean_20['mean_20'].values)
+    sample_mean_50.loc[i] = [sample_50.mean()]
+    line50.set_data(sample_mean_50.index.values, sample_mean_50.values)
 
     # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
-    text05.set_text(f'Sample {i}: {str(sample_05.values)}\nSample mean (x̄): {sample_05.mean()}')
-    text20.set_text(f'Sample {i}: {str(sample_20.values)}\nSample mean (x̄): {sample_20.mean()}')
-    text05_SE.set_text(f'Standard Error (SE5) = {se_05:.2f}\nStandard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}')
-    text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\nStandard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}')
+    text03.set_text(f'Sample {i}: {str(sample_03.values)}\nSample mean (x̄): {sample_03.mean()}')
+    text50.set_text(f'Sample {i}: Sample mean (x̄): {sample_50.mean()}')
+    text05_SEE.set_text(f'Standard Deviation (s) = {sample_mean_03["mean_03"].std():.2f}\n'
+                       + f'Standard Error Estimator = {see_03:.2f}')
+    text50_SEE.set_text(f'Standard Deviation (s) = {sample_mean_50["mean_50"].std():.2f}\n'
+                       + f'Standard Error Estimator = {see_50:.2f}')
 
-    z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05
-    z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20
+    t_sample_mean_03 = (sample_mean_03['mean_03'] - mean) / see_03 - 1
+    t_sample_mean_50 = (sample_mean_50['mean_50'] - mean) / see_50 + 1
 
-    if (i < 100) or (i == 999):
+    if (i < 100) or (i == 999): # 
         ####### [2,0] #######
         axes[2,0].cla()
-        axes[2,0].hist(sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=5)')
-        axes[2,0].hist(sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=20)')
-        axes[2,0].plot(X_05, PDF_05, alpha=1.0, color='black', linewidth=3.0)
-        axes[2,0].plot(X_20, PDF_20, alpha=1.0, color='black', linewidth=3.0)
+        axes[2,0].hist(sample_mean_03.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=3)')
+        axes[2,0].hist(sample_mean_50.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=50)')
+        axes[2,0].plot(X_03, PDF_03, alpha=1.0, color='black', linewidth=2.0)
+        axes[2,0].plot(X_50, PDF_50, alpha=1.0, color='purple', linewidth=2.0)
 
-        axes[2,0].text(75000, 0.00004, f'N(μ, SE20)')
-        axes[2,0].text(85000, 0.00002, f'N(μ, SE5)')
+        # axes[2,0].text(75000, 0.00004, f'N(μ, SE20)')
+        # axes[2,0].text(85000, 0.00002, f'N(μ, SE5)')
 
         ####### [2,1] #######
         axes[2,1].cla()
-        axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
-        axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
-        axes[2,1].plot(Z_X, Z_PDF, alpha=1.0, color='black', linewidth=3.0)
+        axes[2,1].hist(t_sample_mean_03.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean T-score Density (n=3)')
+        axes[2,1].hist(t_sample_mean_50.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean T-score Density (n=50)')
+        axes[2,1].plot(T_X, T_PDF_3, alpha=1.0, color='black', linewidth=2.0)
+        axes[2,1].plot(T_X, T_PDF_49, alpha=1.0, color='purple', linewidth=2.0)
 
-        axes[2,1].text(1, 0.3, f'N(0, 1) - standard normal')
+        # axes[2,1].text(1, 0.3, f'N(0, 1) - standard normal')
 
         ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
         axes[2,0].set_xlabel('sample mean')
         axes[2,0].set_ylabel('density')
-        axes[2,0].set_title('Density Plots for sample means (sample sizes n=5 and n=20)')
+        axes[2,0].set_title('Density Plots for sample means (sample sizes n=3 and n=50)')
 
         axes[2,1].grid(axis='both', linestyle='--', color='0.95')
         axes[2,1].set_xlabel('sample mean')
         axes[2,1].set_ylabel('density')
-        axes[2,1].set_title('Density Plots for sample mean z-scores (sample sizes n=5 and n=20)')
+        axes[2,1].set_title('Density Plots for sample mean t-scores (sample sizes n=3 and n=50)')
         
         axes[2,0].legend(loc="upper right")
         axes[2,1].legend(loc="upper right")
 
-        (i % 20 == 0) and plt.tight_layout()
+        ((i % 20 == 0) or (i == 999)) and plt.tight_layout()
 
     # pause the plot for 0.01s before next point is shown 
     # plt.pause(0.5 if i < 100 else 0.0001) 
@@ -188,5 +195,6 @@ for i in range(1000):
 
 print("end")
 
+plt.tight_layout()
 plt.show()
 
