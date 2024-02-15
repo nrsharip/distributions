@@ -97,11 +97,8 @@ axes[1,1].legend(loc="lower right")
 
 sample_mean_03 = pd.DataFrame(columns = ['mean_03'])
 sample_mean_50 = pd.DataFrame(columns = ['mean_50'])
-
-T_X = np.linspace(-5, 5, 600)
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html
-T_PDF_3 = stats.t.pdf(T_X, 2,loc=-1,scale=1)
-T_PDF_49 = stats.t.pdf(T_X, 49,loc=1,scale=1)
+t_sample_mean_03 = pd.DataFrame(columns = ['mean_03'])
+t_sample_mean_50 = pd.DataFrame(columns = ['mean_50'])
 
 # https://www.geeksforgeeks.org/dynamic-visualization-using-python/
 for i in range(1000): 
@@ -114,16 +111,6 @@ for i in range(1000):
     if see_03 == 0 or see_50 == 0:
         continue
     # print(see_03, see_50)
-
-    X_03 = np.linspace(math.floor(mean - 4*see_03), math.ceil(mean + 4*see_03), 400)
-    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
-    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-    PDF_03 = stats.t.pdf(x=X_03, df=2, loc=mean, scale=see_03)
-
-    X_50 = np.linspace(math.floor(mean - 4*see_50), math.ceil(mean + 4*see_50), 400)
-    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
-    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-    PDF_50 = stats.t.pdf(x=X_50, df=49, loc=mean, scale=see_50)
 
     bins = [intervals.get_loc(value) for value in sample_03.values]
     for j in range(len(patches00)):
@@ -148,8 +135,24 @@ for i in range(1000):
     text50_SEE.set_text(f'Standard Deviation (s) = {sample_mean_50["mean_50"].std():.2f}\n'
                        + f'Standard Error Estimator (SEE50) = {see_50:.2f}')
 
-    t_sample_mean_03 = (sample_mean_03['mean_03'] - mean) / see_03 - 1 # to separate two distributions (n=3 and n=50)
-    t_sample_mean_50 = (sample_mean_50['mean_50'] - mean) / see_50 + 1 # to separate two distributions (n=3 and n=50)
+    t_sample_mean_03.loc[i] = [(sample_03.mean() - mean) / see_03 - 1] # to separate two distributions (n=3 and n=50)
+    t_sample_mean_50.loc[i] = [(sample_50.mean() - mean) / see_50 + 1] # to separate two distributions (n=3 and n=50)
+
+    X_03 = np.linspace(math.floor(sample_mean_03.min()), math.ceil(sample_mean_03.max()), 400)
+    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
+    PDF_03 = stats.t.pdf(x=X_03, df=2, loc=mean, scale=see_03)
+
+    X_50 = np.linspace(math.floor(sample_mean_50.min()), math.ceil(sample_mean_50.max()), 400)
+    # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
+    PDF_50 = stats.t.pdf(x=X_50, df=49, loc=mean, scale=see_50)
+
+    T_X_03 = np.linspace(math.floor(t_sample_mean_03.min()), math.ceil(t_sample_mean_03.max()), 400)
+    T_X_50 = np.linspace(math.floor(t_sample_mean_50.min()), math.ceil(t_sample_mean_50.max()), 400)
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html
+    T_PDF_3 = stats.t.pdf(T_X_03, 2,loc=-1,scale=1)
+    T_PDF_49 = stats.t.pdf(T_X_50, 49,loc=1,scale=1)
 
     if (i < 100) or (i == 999): # 
         ####### [2,0] #######
@@ -162,18 +165,18 @@ for i in range(1000):
         axes[2,0].text(75000, 0.00004, f'T(μ, SEE03, df=2)')
         axes[2,0].text(85000, 0.00002, f'T(μ, SEE50, df=49)')
 
-        axes[2,0].set_xlim(0, raw_data.max()) 
+        # axes[2,0].set_xlim(0, raw_data.max()) 
         ####### [2,1] #######
         axes[2,1].cla()
         axes[2,1].hist(t_sample_mean_03.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean T-score Density (n=3)')
         axes[2,1].hist(t_sample_mean_50.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean T-score Density (n=50)')
-        axes[2,1].plot(T_X, T_PDF_3, alpha=1.0, color='black', linewidth=2.0)
-        axes[2,1].plot(T_X, T_PDF_49, alpha=1.0, color='purple', linewidth=2.0)
+        axes[2,1].plot(T_X_03, T_PDF_3, alpha=1.0, color='black', linewidth=2.0)
+        axes[2,1].plot(T_X_50, T_PDF_49, alpha=1.0, color='purple', linewidth=2.0)
 
-        axes[2,1].text(-4, 0.3, f'T(0, 1, df=2)')
-        axes[2,1].text(3, 0.3, f'T(0, 1, df=49)')
+        axes[2,1].text(-7, 0.35, f'T(-1, 1, df=2)')
+        axes[2,1].text(2, 0.40, f'T(1, 1, df=49)')
 
-        axes[2,1].set_xlim(-6, 6) 
+        # axes[2,1].set_xlim(-6, 6)
         ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
@@ -187,7 +190,7 @@ for i in range(1000):
         axes[2,1].set_title('Density Plots for sample mean t-scores (sample sizes n=3 and n=50)')
         
         axes[2,0].legend(loc="upper right")
-        axes[2,1].legend(loc="upper right")
+        axes[2,1].legend(loc="upper left")
 
         ((i % 20 == 0) or (i == 999)) and plt.tight_layout()
 
