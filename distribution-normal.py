@@ -34,12 +34,34 @@ print("std (σ): ", std)
 
 fig, axes = plt.subplots(figsize=(14, 5), ncols=2, nrows=3)
 
+axes[0,0].grid(axis='both', linestyle='--', color='0.95')
+axes[0,0].set_xlabel('raw data from CSV')
+axes[0,0].set_ylabel('density')
+axes[0,0].set_title('Density Plot for CSV data')
+
+axes[1,0].grid(axis='both', linestyle='--', color='0.95')
+axes[1,0].set_xlabel('raw data from CSV')
+axes[1,0].set_ylabel('density')
+axes[1,0].set_title('Density Plot for CSV data')
+
+axes[0,1].grid(axis='both', linestyle='--', color='0.95')
+axes[0,1].set_xlabel('sample number')
+axes[0,1].set_ylabel('sample mean (x̄)')
+axes[0,1].set_title('Sample Mean (x̄) for sample size of 5 (n=5)')
+
+axes[1,1].grid(axis='both', linestyle='--', color='0.95')
+axes[1,1].set_xlabel('sample number')
+axes[1,1].set_ylabel('sample mean (x̄)')
+axes[1,1].set_title('Sample Mean (x̄) for sample size of 20 (n=20)')
+
+
 ####### [0,0] #######
 N00, bins00, patches00 = axes[0,0].hist(
     raw_data,
     bins = BINS,
     density=True,
-    rwidth=0.8, 
+    rwidth=0.8,
+    label='Data Density'
 )
 
 ####### [1,0] #######
@@ -48,10 +70,11 @@ N10, bins10, patches10 = axes[1,0].hist(
     bins = BINS,
     density=True,
     rwidth=0.8, 
+    label='Data Density'
 )
 
 ####### [0,1] #######
-line05, = axes[0,1].plot([], color='r') 
+line05, = axes[0,1].plot([], color='r', label='Sample Mean (n=5)') 
 # Set the x-axis and y-axis limits to 100 
 axes[0,1].set_xlim(0, 1000) 
 axes[0,1].set_ylim(0, raw_data.max()) 
@@ -59,12 +82,19 @@ axes[0,1].set_ylim(0, raw_data.max())
 text05 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
 
 ####### [1,1] #######
-line20, = axes[1,1].plot([], color='g') 
+line20, = axes[1,1].plot([], color='g', label='Sample Mean (n=20)') 
 # Set the x-axis and y-axis limits to 100 
 axes[1,1].set_xlim(0, 1000) 
 axes[1,1].set_ylim(0, raw_data.max()) 
 
-text20 = axes[1,1].text(5, 3*raw_data.max()/5, f'')
+text20 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
+
+####### Legends #######
+
+axes[0,0].legend(loc="upper right")
+axes[1,0].legend(loc="upper right")
+axes[0,1].legend(loc="lower right")
+axes[1,1].legend(loc="lower right")
 
 sample_mean_05 = pd.DataFrame(columns = ['mean_05'])
 sample_mean_20 = pd.DataFrame(columns = ['mean_20'])
@@ -113,17 +143,30 @@ for i in range(1000):
     if (i < 100) or (i == 999):
         ####### [2,0] #######
         axes[2,0].cla()
-        axes[2,0].hist(sample_mean_05['mean_05'].values, bins = BINS, density=True, rwidth=0.8, alpha=0.8, color='r')
-        axes[2,0].hist(sample_mean_20['mean_20'].values, bins = BINS, density=True, rwidth=0.8, alpha=0.8, color='g')
+        axes[2,0].hist(sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=5)')
+        axes[2,0].hist(sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=20)')
         axes[2,0].plot(X_05, PDF_05, alpha=1.0, color='black', linewidth=3.0)
         axes[2,0].plot(X_20, PDF_20, alpha=1.0, color='black', linewidth=3.0)
 
         ####### [2,1] #######
         axes[2,1].cla()
-        axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.8, alpha=0.8, color='r')
-        axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.8, alpha=0.8, color='g')
+        axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
+        axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
         axes[2,1].plot(Z_X, Z_PDF, alpha=1.0, color='black', linewidth=3.0)
+
+        axes[2,0].grid(axis='both', linestyle='--', color='0.95')
+        axes[2,0].set_xlabel('sample mean')
+        axes[2,0].set_ylabel('density')
+        axes[2,0].set_title('Density Plots for sample means (sample sizes n=5 and n=20)')
+
+        axes[2,1].grid(axis='both', linestyle='--', color='0.95')
+        axes[2,1].set_xlabel('sample mean')
+        axes[2,1].set_ylabel('density')
+        axes[2,1].set_title('Density Plots for sample mean z-scores (sample sizes n=5 and n=20)')
         
+        axes[2,0].legend(loc="upper right")
+        axes[2,1].legend(loc="upper right")
+
         (i % 20 == 0) and plt.tight_layout()
 
     # pause the plot for 0.01s before next point is shown 
