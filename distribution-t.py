@@ -135,8 +135,13 @@ for i in range(1000):
     text50_SEE.set_text(f'Standard Deviation (s) = {sample_mean_50["mean_50"].std():.2f}\n'
                        + f'Standard Error Estimator (SEE50) = {see_50:.2f}')
 
-    t_sample_mean_03.loc[i] = [(sample_03.mean() - mean) / see_03 - 1] # to separate two distributions (n=3 and n=50)
-    t_sample_mean_50.loc[i] = [(sample_50.mean() - mean) / see_50 + 1] # to separate two distributions (n=3 and n=50)
+    t_sample_mean_03.loc[i] = (sample_03.mean() - mean) / see_03 - 1 # to separate two distributions (n=3 and n=50)
+    t_sample_mean_50.loc[i] = (sample_50.mean() - mean) / see_50 + 1 # to separate two distributions (n=3 and n=50)
+
+    t_03_min = math.floor(t_sample_mean_03.min())
+    t_03_max = math.ceil(t_sample_mean_03.max())
+    t_50_min = math.floor(t_sample_mean_50.min())
+    t_50_max = math.ceil(t_sample_mean_50.max())
 
     X_03 = np.linspace(math.floor(sample_mean_03.min()), math.ceil(sample_mean_03.max()), 400)
     # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
@@ -148,8 +153,8 @@ for i in range(1000):
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
     PDF_50 = stats.t.pdf(x=X_50, df=49, loc=mean, scale=see_50)
 
-    T_X_03 = np.linspace(math.floor(t_sample_mean_03.min()), math.ceil(t_sample_mean_03.max()), 400)
-    T_X_50 = np.linspace(math.floor(t_sample_mean_50.min()), math.ceil(t_sample_mean_50.max()), 400)
+    T_X_03 = np.linspace(t_03_min, t_03_max, 400)
+    T_X_50 = np.linspace(t_50_min, t_50_max, 400)
     # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.t.html
     T_PDF_3 = stats.t.pdf(T_X_03, 2,loc=-1,scale=1)
     T_PDF_49 = stats.t.pdf(T_X_50, 49,loc=1,scale=1)
@@ -173,10 +178,10 @@ for i in range(1000):
         axes[2,1].plot(T_X_03, T_PDF_3, alpha=1.0, color='black', linewidth=2.0)
         axes[2,1].plot(T_X_50, T_PDF_49, alpha=1.0, color='purple', linewidth=2.0)
 
-        axes[2,1].text(-7, 0.35, f'T(-1, 1, df=2)')
-        axes[2,1].text(2, 0.40, f'T(1, 1, df=49)')
+        axes[2,1].text(-5, 0.3, f'T(-1, 1, df=2)')
+        axes[2,1].text(2.5, 0.3, f'T(1, 1, df=49)')
 
-        # axes[2,1].set_xlim(-6, 6)
+        axes[2,1].set_xlim(max(-10, min(t_03_min, t_50_min)), min(10, max(t_03_max, t_50_max)))
         ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
