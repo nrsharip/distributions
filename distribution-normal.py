@@ -140,9 +140,12 @@ for i in range(1000):
     # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
     text05.set_text(f'Sample {i}: {str(sample_05.values)}\nSample mean (x̄): {sample_05.mean()}')
     text20.set_text(f'Sample {i}: {str(sample_20.values)}\nSample mean (x̄): {sample_20.mean()}')
-    text05_SE.set_text(f'Standard Error (SE5) = {se_05:.2f}\nStandard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}')
-    text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\nStandard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}')
-
+    text05_SE.set_text(f'Standard Error (SE5) = {se_05:.2f}\n'
+                       + f'Standard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}\n'
+                       + f'Standard Error Estimator = {sample_05.std() / math.sqrt(5):.2f}')
+    text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\n'
+                       + f'Standard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}\n'
+                       + f'Standard Error Estimator = {sample_20.std() / math.sqrt(20):.2f}')
     z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05
     z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20
 
