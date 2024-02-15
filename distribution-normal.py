@@ -63,6 +63,7 @@ N00, bins00, patches00 = axes[0,0].hist(
     rwidth=0.8,
     label='Data Density'
 )
+axes[0,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
 
 ####### [1,0] #######
 N10, bins10, patches10 = axes[1,0].hist(
@@ -72,6 +73,7 @@ N10, bins10, patches10 = axes[1,0].hist(
     rwidth=0.8, 
     label='Data Density'
 )
+axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
 
 ####### [0,1] #######
 line05, = axes[0,1].plot([], color='r', label='Sample Mean (n=5)') 
@@ -80,6 +82,7 @@ axes[0,1].set_xlim(0, 1000)
 axes[0,1].set_ylim(0, raw_data.max()) 
 
 text05 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
+text05_SE = axes[0,1].text(25, 5_000, f'Standard Error (SE5) = {se_05:.2f}')
 
 ####### [1,1] #######
 line20, = axes[1,1].plot([], color='g', label='Sample Mean (n=20)') 
@@ -88,6 +91,7 @@ axes[1,1].set_xlim(0, 1000)
 axes[1,1].set_ylim(0, raw_data.max()) 
 
 text20 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
+text20_SE = axes[1,1].text(25, 5_000, f'Standard Error (SE20) = {se_20:.2f}')
 
 ####### Legends #######
 
@@ -126,16 +130,18 @@ for i in range(1000):
     for j in range(len(patches10)):
         patches10[j].set_facecolor('g' if j in bins else 'b')
 
-    # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
-    text05.set_text(f'Sample {i}: {str(sample_05.values)}\nSample mean (x̄): {sample_05.mean()}')
-    text20.set_text(f'Sample {i}: {str(sample_20.values)}\nSample mean (x̄): {sample_20.mean()}')
     # https://www.geeksforgeeks.org/how-to-add-one-row-in-an-existing-pandas-dataframe/
-
     sample_mean_05.loc[i] = [sample_05.mean()]
     line05.set_data(sample_mean_05.index.values, sample_mean_05['mean_05'].values)
 
     sample_mean_20.loc[i] = [sample_20.mean()]
     line20.set_data(sample_mean_20.index.values, sample_mean_20['mean_20'].values)
+
+    # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
+    text05.set_text(f'Sample {i}: {str(sample_05.values)}\nSample mean (x̄): {sample_05.mean()}')
+    text20.set_text(f'Sample {i}: {str(sample_20.values)}\nSample mean (x̄): {sample_20.mean()}')
+    text05_SE.set_text(f'Standard Error (SE5) = {se_05:.2f}\nStandard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}')
+    text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\nStandard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}')
 
     z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05
     z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20
@@ -148,11 +154,18 @@ for i in range(1000):
         axes[2,0].plot(X_05, PDF_05, alpha=1.0, color='black', linewidth=3.0)
         axes[2,0].plot(X_20, PDF_20, alpha=1.0, color='black', linewidth=3.0)
 
+        axes[2,0].text(75000, 0.00004, f'N(μ, SE20)')
+        axes[2,0].text(85000, 0.00002, f'N(μ, SE5)')
+
         ####### [2,1] #######
         axes[2,1].cla()
         axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
         axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
         axes[2,1].plot(Z_X, Z_PDF, alpha=1.0, color='black', linewidth=3.0)
+
+        axes[2,1].text(1, 0.3, f'N(0, 1) - standard normal')
+
+        ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
         axes[2,0].set_xlabel('sample mean')
