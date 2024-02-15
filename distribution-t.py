@@ -113,8 +113,7 @@ for i in range(1000):
 
     if see_03 == 0 or see_50 == 0:
         continue
-
-    print(see_03, see_50)
+    # print(see_03, see_50)
 
     X_03 = np.linspace(math.floor(mean - 4*see_03), math.ceil(mean + 4*see_03), 400)
     # https://proclusacademy.com/blog/practical/normal-distribution-python-scipy/
@@ -145,12 +144,12 @@ for i in range(1000):
     text03.set_text(f'Sample {i}: {str(sample_03.values)}\nSample mean (x̄): {sample_03.mean()}')
     text50.set_text(f'Sample {i}: Sample mean (x̄): {sample_50.mean()}')
     text05_SEE.set_text(f'Standard Deviation (s) = {sample_mean_03["mean_03"].std():.2f}\n'
-                       + f'Standard Error Estimator = {see_03:.2f}')
+                       + f'Standard Error Estimator (SEE03) = {see_03:.2f}')
     text50_SEE.set_text(f'Standard Deviation (s) = {sample_mean_50["mean_50"].std():.2f}\n'
-                       + f'Standard Error Estimator = {see_50:.2f}')
+                       + f'Standard Error Estimator (SEE50) = {see_50:.2f}')
 
-    t_sample_mean_03 = (sample_mean_03['mean_03'] - mean) / see_03 - 1
-    t_sample_mean_50 = (sample_mean_50['mean_50'] - mean) / see_50 + 1
+    t_sample_mean_03 = (sample_mean_03['mean_03'] - mean) / see_03 - 1 # to separate two distributions (n=3 and n=50)
+    t_sample_mean_50 = (sample_mean_50['mean_50'] - mean) / see_50 + 1 # to separate two distributions (n=3 and n=50)
 
     if (i < 100) or (i == 999): # 
         ####### [2,0] #######
@@ -160,9 +159,10 @@ for i in range(1000):
         axes[2,0].plot(X_03, PDF_03, alpha=1.0, color='black', linewidth=2.0)
         axes[2,0].plot(X_50, PDF_50, alpha=1.0, color='purple', linewidth=2.0)
 
-        # axes[2,0].text(75000, 0.00004, f'N(μ, SE20)')
-        # axes[2,0].text(85000, 0.00002, f'N(μ, SE5)')
+        axes[2,0].text(75000, 0.00004, f'T(μ, SEE03, df=2)')
+        axes[2,0].text(85000, 0.00002, f'T(μ, SEE50, df=49)')
 
+        axes[2,0].set_xlim(0, raw_data.max()) 
         ####### [2,1] #######
         axes[2,1].cla()
         axes[2,1].hist(t_sample_mean_03.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean T-score Density (n=3)')
@@ -170,8 +170,10 @@ for i in range(1000):
         axes[2,1].plot(T_X, T_PDF_3, alpha=1.0, color='black', linewidth=2.0)
         axes[2,1].plot(T_X, T_PDF_49, alpha=1.0, color='purple', linewidth=2.0)
 
-        # axes[2,1].text(1, 0.3, f'N(0, 1) - standard normal')
+        axes[2,1].text(-4, 0.3, f'T(0, 1, df=2)')
+        axes[2,1].text(3, 0.3, f'T(0, 1, df=49)')
 
+        axes[2,1].set_xlim(-6, 6) 
         ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
