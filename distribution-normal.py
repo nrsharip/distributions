@@ -113,9 +113,10 @@ X_20 = np.linspace(math.floor(mean - 4*se_20), math.ceil(mean + 4*se_20), 400)
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
 PDF_20 = stats.norm(loc=mean, scale=se_20).pdf(X_20)
 
-Z_X = np.linspace(-4, 4, 400)
+Z_X = np.linspace(-5, 5, 600)
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.norm.html
-Z_PDF = stats.norm(loc=0, scale=1).pdf(Z_X)
+Z_PDF_1 = stats.norm(loc=-1, scale=1).pdf(Z_X)
+Z_PDF_2 = stats.norm(loc=1, scale=1).pdf(Z_X)
 
 # https://www.geeksforgeeks.org/dynamic-visualization-using-python/
 for i in range(1000): 
@@ -146,8 +147,8 @@ for i in range(1000):
     text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\n'
                        + f'Standard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}\n'
                        + f'Standard Error Estimator = {sample_20.std() / math.sqrt(20):.2f}')
-    z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05
-    z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20
+    z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05 - 1
+    z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20 + 1
 
     if (i < 100) or (i == 999):
         ####### [2,0] #######
@@ -164,9 +165,11 @@ for i in range(1000):
         axes[2,1].cla()
         axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
         axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
-        axes[2,1].plot(Z_X, Z_PDF, alpha=1.0, color='black', linewidth=3.0)
+        axes[2,1].plot(Z_X, Z_PDF_1, alpha=1.0, color='black', linewidth=3.0)
+        axes[2,1].plot(Z_X, Z_PDF_2, alpha=1.0, color='black', linewidth=3.0)
 
-        axes[2,1].text(1, 0.3, f'N(0, 1) - standard normal')
+        axes[2,1].text(2, 0.3, f'N(1, 1)')
+        axes[2,1].text(-3, 0.3, f'N(-1, 1)')
 
         ####### Legends, Titles, Labels #######
 
