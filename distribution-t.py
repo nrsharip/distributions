@@ -27,7 +27,7 @@ print("mean (μ): ", mean)
 # print("std 5: ", sample_mean_05["income"].std())
 # print("std 20: ", sample_mean_20["income"].std())
 
-fig, axes = plt.subplots(figsize=(14, 5), ncols=2, nrows=3)
+fig, axes = plt.subplots(figsize=(14, 5), ncols=3, nrows=3)
 
 axes[0,0].grid(axis='both', linestyle='--', color='0.95')
 axes[0,0].set_xlabel('raw data from CSV')
@@ -42,13 +42,22 @@ axes[1,0].set_title('Density Plot for CSV data')
 axes[0,1].grid(axis='both', linestyle='--', color='0.95')
 axes[0,1].set_xlabel('sample number')
 axes[0,1].set_ylabel('sample mean (x̄)')
-axes[0,1].set_title('Sample Mean (x̄) for sample size of 5 (n=5)')
+axes[0,1].set_title('Sample Mean (x̄) for sample size of 3 (n=3)')
+
+axes[0,2].grid(axis='both', linestyle='--', color='0.95')
+axes[0,2].set_xlabel('sample number')
+axes[0,2].set_ylabel('Standard Error Estimator (SEE03)')
+axes[0,2].set_title('Standard Error Estimator (n=3)')
 
 axes[1,1].grid(axis='both', linestyle='--', color='0.95')
 axes[1,1].set_xlabel('sample number')
 axes[1,1].set_ylabel('sample mean (x̄)')
-axes[1,1].set_title('Sample Mean (x̄) for sample size of 20 (n=20)')
+axes[1,1].set_title('Sample Mean (x̄) for sample size of 50 (n=50)')
 
+axes[1,2].grid(axis='both', linestyle='--', color='0.95')
+axes[1,2].set_xlabel('sample number')
+axes[1,2].set_ylabel('Standard Error Estimator (SEE50)')
+axes[1,2].set_title('Standard Error Estimator (n=50)')
 
 ####### [0,0] #######
 N00, bins00, patches00 = axes[0,0].hist(
@@ -58,7 +67,7 @@ N00, bins00, patches00 = axes[0,0].hist(
     rwidth=0.8,
     label='Data Density'
 )
-axes[0,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}')
+axes[0,0].text(80_000, 0.000015, f'Population Mean (μ) = {mean:.0f}')
 
 ####### [1,0] #######
 N10, bins10, patches10 = axes[1,0].hist(
@@ -68,7 +77,7 @@ N10, bins10, patches10 = axes[1,0].hist(
     rwidth=0.8, 
     label='Data Density'
 )
-axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}')
+axes[1,0].text(80_000, 0.000015, f'Population Mean (μ) = {mean:.0f}')
 
 ####### [0,1] #######
 line03, = axes[0,1].plot([], color='r', label='Sample Mean (n=3)')
@@ -79,6 +88,20 @@ axes[0,1].set_ylim(0, raw_data.max())
 text03 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
 text05_SEE = axes[0,1].text(25, 5_000, f'')
 
+####### [0,2] #######
+line_see_03, = axes[0,2].plot([], color='r', label='SEE (n=3)')
+# Set the x-axis and y-axis limits to 100 
+axes[0,2].set_xlim(0, 1000) 
+axes[0,2].set_ylim(0, (raw_data.max() - raw_data.min())/(2*math.sqrt(3))) 
+
+# max - min
+# --------- - standard deviation limit
+#     2
+# 
+#  max - min
+# ----------- - Standard Error limit
+# 2 * sqrt(3)
+
 ####### [1,1] #######
 line50, = axes[1,1].plot([], color='g', label='Sample Mean (n=50)') 
 # Set the x-axis and y-axis limits to 100 
@@ -87,6 +110,20 @@ axes[1,1].set_ylim(0, raw_data.max())
 
 text50 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
 text50_SEE = axes[1,1].text(25, 5_000, f'')
+
+####### [1,2] #######
+line_see_50, = axes[1,2].plot([], color='g', label='SEE (n=50)') 
+# Set the x-axis and y-axis limits to 100 
+axes[1,2].set_xlim(0, 1000) 
+axes[1,2].set_ylim(0, (raw_data.max() - raw_data.min())/(2*math.sqrt(50))) 
+
+# max - min
+# --------- - standard deviation limit
+#     2
+# 
+#  max - min
+# ------------ - Standard Error limit
+# 2 * sqrt(50)
 
 ####### Legends #######
 
@@ -97,6 +134,8 @@ axes[1,1].legend(loc="lower right")
 
 sample_mean_03 = pd.DataFrame(columns = ['mean_03'])
 sample_mean_50 = pd.DataFrame(columns = ['mean_50'])
+sample_see_03 = pd.DataFrame(columns = ['see_03'])
+sample_see_50 = pd.DataFrame(columns = ['see_50'])
 t_sample_mean_03 = pd.DataFrame(columns = ['mean_03'])
 t_sample_mean_50 = pd.DataFrame(columns = ['mean_50'])
 
@@ -105,12 +144,18 @@ for i in range(1000):
     sample_03 = raw_data.sample(3)
     sample_50 = raw_data.sample(50)
 
+    # https://en.wikipedia.org/wiki/Standard_error#Estimate
     see_03 = sample_03.std() / math.sqrt(3)
     see_50 = sample_50.std() / math.sqrt(50)
 
     if see_03 == 0 or see_50 == 0:
         continue
     # print(see_03, see_50)
+
+    sample_see_03.loc[i] = [see_03]
+    line_see_03.set_data(sample_see_03.index.values, sample_see_03.values)
+    sample_see_50.loc[i] = [see_50]
+    line_see_50.set_data(sample_see_50.index.values, sample_see_50.values)
 
     bins = [intervals.get_loc(value) for value in sample_03.values]
     for j in range(len(patches00)):
@@ -135,6 +180,7 @@ for i in range(1000):
     text50_SEE.set_text(f'Standard Deviation (s) = {sample_mean_50["mean_50"].std():.2f}\n'
                        + f'Standard Error Estimator (SEE50) = {see_50:.2f}')
 
+    # https://en.wikipedia.org/wiki/Student%27s_t-test#One-sample_t-test
     t_sample_mean_03.loc[i] = (sample_03.mean() - mean) / see_03 - 1 # to separate two distributions (n=3 and n=50)
     t_sample_mean_50.loc[i] = (sample_50.mean() - mean) / see_50 + 1 # to separate two distributions (n=3 and n=50)
 
@@ -187,12 +233,12 @@ for i in range(1000):
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
         axes[2,0].set_xlabel('sample mean')
         axes[2,0].set_ylabel('density')
-        axes[2,0].set_title('Density Plots for sample means (sample sizes n=3 and n=50)')
+        axes[2,0].set_title('Sample Means (sample sizes n=3 and n=50)')
 
         axes[2,1].grid(axis='both', linestyle='--', color='0.95')
         axes[2,1].set_xlabel('sample mean')
         axes[2,1].set_ylabel('density')
-        axes[2,1].set_title('Density Plots for sample mean t-scores (sample sizes n=3 and n=50)')
+        axes[2,1].set_title('Sample Mean t-scores (sample sizes n=3 and n=50)')
         
         axes[2,0].legend(loc="upper right")
         axes[2,1].legend(loc="upper left")
