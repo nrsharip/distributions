@@ -22,14 +22,23 @@ ax2 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
 ax0.grid(axis='both', linestyle='--', color='0.95')
 ax0.set_xlim(0, X_RANGE) 
 ax0.set_ylim(0, Y_RANGE) 
+ax0.set_xlabel('sample\'s number')
+ax0.set_ylabel('count of 1')
+ax0.set_title('Number of successes (p = 0.1)')
 
 ax1.grid(axis='both', linestyle='--', color='0.95')
 ax1.set_xlim(0, X_RANGE) 
 ax1.set_ylim(0, Y_RANGE) 
+ax1.set_xlabel('sample\'s number')
+ax1.set_ylabel('count of 1')
+ax1.set_title('Number of successes (p = 0.5)')
 
 ax2.grid(axis='both', linestyle='--', color='0.95')
 ax2.set_xlim(0, X_RANGE) 
 ax2.set_ylim(0, Y_RANGE)
+ax2.set_xlabel('sample\'s number')
+ax2.set_ylabel('count of 1')
+ax2.set_title('Number of successes (p = 0.8)')
 
 # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
 text025 = ax0.text(50, 19, '') # , transform=plt.gcf().transFigure
@@ -44,7 +53,11 @@ line05, = ax1.plot([3, 4, 5], color='g', label='p=0.5')
 line075, = ax2.plot([3, 4, 5], color='b', label='p=0.75')
 
 # https://stackoverflow.com/questions/53978121/how-can-i-plot-four-subplots-with-different-colspans
-ax4 = plt.subplot2grid((10, 6), (5, 0), rowspan=5, colspan=6)
+ax3 = plt.subplot2grid((10, 6), (5, 0), rowspan=5, colspan=6)
+
+ax0.legend(loc="center right")
+ax1.legend(loc="lower right")
+ax2.legend(loc="center right")
 
 X_025 = np.linspace(0, Y_RANGE, Y_RANGE + 1)
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html
@@ -89,16 +102,24 @@ for i in range(X_RANGE):
         bins05 = distr05["count"].max() - distr05["count"].min()
         bins075 = distr075["count"].max() - distr075["count"].min()
 
-        ax4.cla()
-        ax4.hist(distr025.values, bins = bins025 if bins025 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='sample 10 0.25')
-        ax4.hist(distr05.values, bins = bins05 if bins05 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='sample 10 0.5')
-        ax4.hist(distr075.values, bins = bins075 if bins075 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='sample 10 0.75')
-        ax4.plot(X_025, PPF_025, alpha=1.0, color='r', linewidth=2.0)
-        ax4.plot(X_05, PPF_05, alpha=1.0, color='g', linewidth=2.0)
-        ax4.plot(X_075, PPF_075, alpha=1.0, color='b', linewidth=2.0)
+        ax3.cla()
+        ax3.hist(distr025.values, bins = bins025 if bins025 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='sample 20 0.1')
+        ax3.hist(distr05.values, bins = bins05 if bins05 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='sample 20 0.5')
+        ax3.hist(distr075.values, bins = bins075 if bins075 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='sample 20 0.8')
+        ax3.plot(X_025, PPF_025, alpha=1.0, color='r', linewidth=2.0)
+        ax3.plot(X_05, PPF_05, alpha=1.0, color='g', linewidth=2.0)
+        ax3.plot(X_075, PPF_075, alpha=1.0, color='b', linewidth=2.0)
     
-        ax4.grid(axis='both', linestyle='--', color='0.95')
-        ax4.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax3.grid(axis='both', linestyle='--', color='0.95')
+        ax3.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        # ax3.set_xlabel('count of 1')
+        # ax3.set_ylabel('density')
+        # ax3.set_title('Density Plots for number of successes (p = 0.1 0.5 0.8)')
+        ax3.legend(loc="upper right")
+
+        ax3.text(3, 0.2, "B(20, 0.1)")
+        ax3.text(10, 0.19, "B(20, 0.5)")
+        ax3.text(15, 0.22, "B(20, 0.8)")
 
     (i < 100) and (i % 20 == 0) and plt.tight_layout()
 
