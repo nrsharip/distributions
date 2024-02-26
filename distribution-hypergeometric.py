@@ -81,15 +81,15 @@ ax2.legend(loc="upper right")
 ax3.legend(loc="upper right")
 
 X_1 = np.linspace(0, CARDS_1, CARDS_1 + 1)
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.hypergeom.html
 PMF_1 = stats.hypergeom.pmf(X_1, N, S_COUNT + H_COUNT, CARDS_1)
 
 X_2 = np.linspace(0, CARDS_2, CARDS_2 + 1)
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.hypergeom.html
 PMF_2 = stats.hypergeom.pmf(X_2, N, S_COUNT + H_COUNT, CARDS_2)
 
 X_3 = np.linspace(0, CARDS_3, CARDS_3 + 1)
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.binom.html
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.hypergeom.html
 PMF_3 = stats.hypergeom.pmf(X_3, N, S_COUNT + H_COUNT, CARDS_3)
 
 for i in range(X_RANGE):
