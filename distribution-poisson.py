@@ -100,9 +100,9 @@ for i in range(X_RANGE):
         bins_3 = distr_3["count"].max() - distr_3["count"].min()
 
         ax4.cla()
-        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='sample 20 0.1')
-        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='sample 20 0.5')
-        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='sample 20 0.8')
+        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'sample {Y_RANGE} {P1}')
+        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'sample {Y_RANGE} {P2}')
+        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {Y_RANGE} {P3}')
         ax4.plot(X, PMF_1, marker='o', linestyle='dashed', alpha=1.0, color='r', linewidth=2.0)
         ax4.plot(X, PMF_2, marker='o', linestyle='dashed', alpha=1.0, color='g', linewidth=2.0)
         ax4.plot(X, PMF_3, marker='o', linestyle='dashed', alpha=1.0, color='b', linewidth=2.0)
