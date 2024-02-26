@@ -106,9 +106,9 @@ for i in range(X_RANGE):
         ax3.hist(distr025.values, bins = bins025 if bins025 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='sample 20 0.1')
         ax3.hist(distr05.values, bins = bins05 if bins05 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='sample 20 0.5')
         ax3.hist(distr075.values, bins = bins075 if bins075 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='sample 20 0.8')
-        ax3.plot(X_025, PPF_025, alpha=1.0, color='r', linewidth=2.0)
-        ax3.plot(X_05, PPF_05, alpha=1.0, color='g', linewidth=2.0)
-        ax3.plot(X_075, PPF_075, alpha=1.0, color='b', linewidth=2.0)
+        ax3.plot(X_025, PPF_025, marker='o', linestyle='dashed', alpha=1.0, color='r', linewidth=2.0)
+        ax3.plot(X_05, PPF_05, marker='o', linestyle='dashed', alpha=1.0, color='g', linewidth=2.0)
+        ax3.plot(X_075, PPF_075, marker='o', linestyle='dashed', alpha=1.0, color='b', linewidth=2.0)
     
         ax3.grid(axis='both', linestyle='--', color='0.95')
         ax3.xaxis.set_major_locator(ticker.MultipleLocator(1))
