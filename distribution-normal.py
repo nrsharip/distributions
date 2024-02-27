@@ -10,7 +10,7 @@ DATA_PATH = Path().resolve()
 # Define paths to data sets. If you don't keep your data in the same directory as the code, adapt the path names.
 
 DATA_CSV = DATA_PATH / 'data.csv'
-BINS = 100
+BINS = 50
 
 ## Sampling Distribution of a Statistic
 
@@ -35,24 +35,24 @@ print("std (σ): ", std)
 fig, axes = plt.subplots(figsize=(14, 5), ncols=2, nrows=3)
 
 axes[0,0].grid(axis='both', linestyle='--', color='0.95')
-axes[0,0].set_xlabel('raw data from CSV')
-axes[0,0].set_ylabel('density')
-axes[0,0].set_title('Density Plot for CSV data')
+# axes[0,0].set_xlabel('raw data from CSV')
+# axes[0,0].set_ylabel('density')
+# axes[0,0].set_title('Density Plot for CSV data')
 
 axes[1,0].grid(axis='both', linestyle='--', color='0.95')
-axes[1,0].set_xlabel('raw data from CSV')
-axes[1,0].set_ylabel('density')
-axes[1,0].set_title('Density Plot for CSV data')
+# axes[1,0].set_xlabel('raw data from CSV')
+# axes[1,0].set_ylabel('density')
+# axes[1,0].set_title('Density Plot for CSV data')
 
 axes[0,1].grid(axis='both', linestyle='--', color='0.95')
-axes[0,1].set_xlabel('sample number')
-axes[0,1].set_ylabel('sample mean (x̄)')
-axes[0,1].set_title('Sample Mean (x̄) for sample size of 5 (n=5)')
+# axes[0,1].set_xlabel('sample number')
+# axes[0,1].set_ylabel('sample mean (x̄)')
+# axes[0,1].set_title('Sample Mean (x̄) for sample size of 5 (n=5)')
 
 axes[1,1].grid(axis='both', linestyle='--', color='0.95')
-axes[1,1].set_xlabel('sample number')
-axes[1,1].set_ylabel('sample mean (x̄)')
-axes[1,1].set_title('Sample Mean (x̄) for sample size of 20 (n=20)')
+# axes[1,1].set_xlabel('sample number')
+# axes[1,1].set_ylabel('sample mean (x̄)')
+# axes[1,1].set_title('Sample Mean (x̄) for sample size of 20 (n=20)')
 
 
 ####### [0,0] #######
@@ -77,20 +77,22 @@ axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard D
 
 ####### [0,1] #######
 line05, = axes[0,1].plot([], color='r', label='Sample Mean (n=5)') 
-# Set the x-axis and y-axis limits to 100 
+# https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+axes[0,1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
 axes[0,1].set_xlim(0, 1000) 
 axes[0,1].set_ylim(0, raw_data.max()) 
 
-text05 = axes[0,1].text(5, 4*raw_data.max()/5, f'')
+text05 = axes[0,1].text(25, 4*raw_data.max()/5, f'')
 text05_SE = axes[0,1].text(25, 5_000, f'Standard Error (SE5) = {se_05:.2f}')
 
 ####### [1,1] #######
 line20, = axes[1,1].plot([], color='g', label='Sample Mean (n=20)') 
-# Set the x-axis and y-axis limits to 100 
+# https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+axes[1,1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
 axes[1,1].set_xlim(0, 1000) 
 axes[1,1].set_ylim(0, raw_data.max()) 
 
-text20 = axes[1,1].text(5, 3.5*raw_data.max()/5, f'')
+text20 = axes[1,1].text(25, 4*raw_data.max()/5, f'')
 text20_SE = axes[1,1].text(25, 5_000, f'Standard Error (SE20) = {se_20:.2f}')
 
 ####### Legends #######
@@ -139,32 +141,45 @@ for i in range(1000):
     line20.set_data(sample_mean_20.index.values, sample_mean_20['mean_20'].values)
 
     # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
-    text05.set_text(f'Sample {i}: {str(sample_05.values)}\nSample mean (x̄): {sample_05.mean()}')
-    text20.set_text(f'Sample {i}: {str(sample_20.values)}\nSample mean (x̄): {sample_20.mean()}')
-    text05_SE.set_text(f'Standard Error (SE5) = {se_05:.2f}\n'
-                       + f'Standard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}\n'
-                       + f'Standard Error Estimator = {sample_05.std() / math.sqrt(5):.2f}')
-    text20_SE.set_text(f'Standard Error (SE20) = {se_20:.2f}\n'
-                       + f'Standard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}\n'
-                       + f'Standard Error Estimator = {sample_20.std() / math.sqrt(20):.2f}')
+    text05.set_text(f'' 
+                    + f'Sample {i}: {str(sample_05.values)} \n' 
+                    + f'Sample mean (x̄): {sample_05.mean()}'
+    )
+    text20.set_text(f'' 
+                    + f'Sample {i}: \n' # {str(sample_20.values)}
+                    + f'Sample mean (x̄): {sample_20.mean()}'
+    )
+    text05_SE.set_text(f'' 
+                       + f'Standard Error (SE5) = {se_05:.2f}\n'
+                       # + f'Standard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}\n'
+                       # + f'Standard Error Estimator = {sample_05.std() / math.sqrt(5):.2f}'
+    )
+    text20_SE.set_text(f'' 
+                       + f'Standard Error (SE20) = {se_20:.2f}\n'
+                       # + f'Standard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}\n'
+                       # + f'Standard Error Estimator = {sample_20.std() / math.sqrt(20):.2f}'
+    )
     z_sample_mean_05 = (sample_mean_05['mean_05'] - mean) / se_05 - 1
     z_sample_mean_20 = (sample_mean_20['mean_20'] - mean) / se_20 + 1
 
     if (i < 100) or (i == 999):
         ####### [2,0] #######
         axes[2,0].cla()
-        axes[2,0].hist(sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=5)')
-        axes[2,0].hist(sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=20)')
+        axes[2,0].hist(sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=5)')
+        axes[2,0].hist(sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=20)')
         axes[2,0].plot(X_05, PDF_05, alpha=1.0, color='black', linewidth=3.0)
         axes[2,0].plot(X_20, PDF_20, alpha=1.0, color='black', linewidth=3.0)
 
         axes[2,0].text(75000, 0.00004, f'N(μ, SE20)')
         axes[2,0].text(85000, 0.00002, f'N(μ, SE5)')
 
+        # https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+        axes[2,0].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+
         ####### [2,1] #######
         axes[2,1].cla()
-        axes[2,1].hist(z_sample_mean_05.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
-        axes[2,1].hist(z_sample_mean_20.values, bins = BINS, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
+        axes[2,1].hist(z_sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
+        axes[2,1].hist(z_sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
         axes[2,1].plot(Z_X, Z_PDF_1, alpha=1.0, color='black', linewidth=3.0)
         axes[2,1].plot(Z_X, Z_PDF_2, alpha=1.0, color='black', linewidth=3.0)
 
@@ -174,14 +189,14 @@ for i in range(1000):
         ####### Legends, Titles, Labels #######
 
         axes[2,0].grid(axis='both', linestyle='--', color='0.95')
-        axes[2,0].set_xlabel('sample mean')
-        axes[2,0].set_ylabel('density')
-        axes[2,0].set_title('Density Plots for sample means (sample sizes n=5 and n=20)')
+        # axes[2,0].set_xlabel('sample mean')
+        # axes[2,0].set_ylabel('density')
+        # axes[2,0].set_title('Density Plots for sample means (sample sizes n=5 and n=20)')
 
         axes[2,1].grid(axis='both', linestyle='--', color='0.95')
-        axes[2,1].set_xlabel('sample mean')
-        axes[2,1].set_ylabel('density')
-        axes[2,1].set_title('Density Plots for sample mean z-scores (sample sizes n=5 and n=20)')
+        # axes[2,1].set_xlabel('sample mean')
+        # axes[2,1].set_ylabel('density')
+        # axes[2,1].set_title('Density Plots for sample mean z-scores (sample sizes n=5 and n=20)')
         
         axes[2,0].legend(loc="upper right")
         axes[2,1].legend(loc="upper right")
