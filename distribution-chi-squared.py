@@ -148,6 +148,10 @@ for i in range(X_RANGE):
         ax2.xaxis.set_major_locator(ticker.MultipleLocator(1))
         ax2.set_xlim(0, max(max(chis_0), max(chis_1), max(chis_2)))
 
+        ax2.text(0.5, 0.42, f'χ²(k={DF_1})')
+        ax2.text(3, 0.2, f'χ²(k={DF_2})')
+        ax2.text(6, 0.14, f'χ²(k={DF_3})')
+
         plt.tight_layout()
         plt.pause(0.05)
 
