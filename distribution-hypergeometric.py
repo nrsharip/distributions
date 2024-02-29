@@ -54,14 +54,14 @@ ax2.grid(axis='both', linestyle='--', color='0.95')
 ax2.set_xlim(0, X_RANGE) 
 ax2.set_ylim(0, CARDS_2) 
 ax2.set_xlabel('sample\'s number')
-ax2.set_ylabel('count of spades')
+ax2.set_ylabel('count of spades and hearts')
 ax2.set_title(f'Number of Spades and Hearts (n = {CARDS_2})')
 
 ax3.grid(axis='both', linestyle='--', color='0.95')
 ax3.set_xlim(0, X_RANGE) 
 ax3.set_ylim(0, CARDS_3)
 ax3.set_xlabel('sample\'s number')
-ax3.set_ylabel('count of spades')
+ax3.set_ylabel('count of spades and hearts')
 ax3.set_title(f'Number of Spades and Hearts (n = {CARDS_3})')
 
 # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots

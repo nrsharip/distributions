@@ -28,8 +28,11 @@ ax12 = plt.subplot2grid((9, 6), (3, 4), rowspan=3, colspan=2)
 ax2 = plt.subplot2grid((9, 6), (6, 0), rowspan=3, colspan=6)
 
 ax00.grid(axis='both', linestyle='--', color='0.95')
+ax00.set_title(f'Normal Randoms (degrees of freedom = {DF_1})')
 ax01.grid(axis='both', linestyle='--', color='0.95')
+ax01.set_title(f'Normal Randoms (degrees of freedom = {DF_2})')
 ax02.grid(axis='both', linestyle='--', color='0.95')
+ax02.set_title(f'Normal Randoms (degrees of freedom = {DF_3})')
 
 ax10.grid(axis='both', linestyle='--', color='0.95')
 ax10.set_xlim(0, X_RANGE)
@@ -57,8 +60,11 @@ dots02, = ax02.plot([], [], 'bo', alpha=1.0)
 lines02 = ax02.vlines([], [], [], color='b', alpha=1.0)
 
 line10, = ax10.plot([], color='r', label=f'p = {DF_1}')
+text10 = ax10.text(20, 4 * YLIM1 / 5, f'')
 line11, = ax11.plot([], color='g', label=f'p = {DF_2}')
+text11 = ax11.text(20, 4 * YLIM2 / 5, f'')
 line12, = ax12.plot([], color='b', label=f'p = {DF_3}')
+text12 = ax12.text(20, 4 * YLIM3 / 5, f'')
 
 chis_0 = []
 chis_1 = []
@@ -128,6 +134,10 @@ for i in range(X_RANGE):
     line11.set_data([i for i in range(len(chis_1))], chis_1)
     line12.set_data([i for i in range(len(chis_2))], chis_2)
 
+    text10.set_text(f'χ1² = Z1² + Z2² = {chi_squared_0}')
+    text11.set_text(f'χ2² = Z1² + Z2² + Z3² = {chi_squared_1}')
+    text12.set_text(f'χ3² = Z1² + Z2² + Z3² + Z4² + Z5² + Z6² + Z7² + Z8²\n = {chi_squared_2}')
+
     ###########
 
     if (i < 100) or (i == X_RANGE - 1):
@@ -137,9 +147,9 @@ for i in range(X_RANGE):
         bins2 = int(max(chis_2) - min(chis_2)) + 1
 
         ax2.cla()
-        ax2.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'degrees of freedom {DF_1}')
-        ax2.hist(chis_1, bins = bins1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'degrees of freedom {DF_2}')
-        ax2.hist(chis_2, bins = bins2, density=True, rwidth=0.4, alpha=0.8, color='b', label=f'degrees of freedom {DF_3}')
+        ax2.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'degrees of freedom = {DF_1}')
+        ax2.hist(chis_1, bins = bins1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'degrees of freedom = {DF_2}')
+        ax2.hist(chis_2, bins = bins2, density=True, rwidth=0.4, alpha=0.8, color='b', label=f'degrees of freedom = {DF_3}')
         ax2.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
         ax2.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
         ax2.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
@@ -151,6 +161,8 @@ for i in range(X_RANGE):
         ax2.text(0.5, 0.42, f'χ²(k={DF_1})')
         ax2.text(3, 0.2, f'χ²(k={DF_2})')
         ax2.text(6, 0.14, f'χ²(k={DF_3})')
+
+        ax2.legend(loc="upper right")
 
         plt.tight_layout()
         plt.pause(0.05)

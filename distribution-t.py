@@ -235,8 +235,8 @@ for i in range(1000):
     if (i < 100) or (i == 999): # 
         ####### [2,0] #######
         ax20.cla()
-        ax20.hist(sample_mean_1.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=3)')
-        ax20.hist(sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=50)')
+        ax20.hist(sample_mean_1.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'Sample Mean Density (n={SAMPLE_SIZE_1})')
+        ax20.hist(sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'Sample Mean Density (n={SAMPLE_SIZE_2})')
         ax20.plot(X_1, PDF_1, alpha=1.0, color='black', linewidth=2.0)
         ax20.plot(X_2, PDF_2, alpha=1.0, color='purple', linewidth=2.0)
 
@@ -248,8 +248,8 @@ for i in range(1000):
         ax20.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
         ####### [2,1] #######
         ax21.cla()
-        ax21.hist(t_sample_mean_1.values, bins = 80, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean T-score Density (n=3)')
-        ax21.hist(t_sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean T-score Density (n=50)')
+        ax21.hist(t_sample_mean_1.values, bins = 80, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'Sample Mean T-score Density (n={SAMPLE_SIZE_1})')
+        ax21.hist(t_sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'Sample Mean T-score Density (n={SAMPLE_SIZE_2})')
         ax21.plot(T_X_1, T_PDF_1, alpha=1.0, color='black', linewidth=2.0)
         ax21.plot(T_X_2, T_PDF_2, alpha=1.0, color='purple', linewidth=2.0)
 
@@ -269,8 +269,8 @@ for i in range(1000):
         # ax21.set_ylabel('density')
         # ax21.set_title('Sample Mean t-scores (sample sizes n=3 and n=50)')
         
-        # ax20.legend(loc="upper right")
-        # ax21.legend(loc="upper left")
+        ax20.legend(loc="upper right")
+        ax21.legend(loc="upper right")
 
         ((i % 20 == 0) or (i == 999)) and plt.tight_layout()
 
