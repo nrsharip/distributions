@@ -1,0 +1,466 @@
+diff --git a/distribution-binomial.py b/distribution-binomial.py
+index 88ea996..f498cb9 100644
+--- a/distribution-binomial.py
++++ b/distribution-binomial.py
+@@ -22,23 +22,23 @@ ax2 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
+ ax0.grid(axis='both', linestyle='--', color='0.95')
+ ax0.set_xlim(0, X_RANGE) 
+ ax0.set_ylim(0, Y_RANGE) 
+-ax0.set_xlabel('sample\'s number')
+-ax0.set_ylabel('count of 1')
+-ax0.set_title('Number of successes (p = 0.1)')
++ax0.set_xlabel('номер выборки')
++ax0.set_ylabel('число единиц')
++ax0.set_title('Число успехов (вероятность p = 0.1)')
+ 
+ ax1.grid(axis='both', linestyle='--', color='0.95')
+ ax1.set_xlim(0, X_RANGE) 
+ ax1.set_ylim(0, Y_RANGE) 
+-ax1.set_xlabel('sample\'s number')
+-ax1.set_ylabel('count of 1')
+-ax1.set_title('Number of successes (p = 0.5)')
++ax1.set_xlabel('номер выборки')
++ax1.set_ylabel('число единиц')
++ax1.set_title('Число успехов (вероятность p = 0.5)')
+ 
+ ax2.grid(axis='both', linestyle='--', color='0.95')
+ ax2.set_xlim(0, X_RANGE) 
+ ax2.set_ylim(0, Y_RANGE)
+-ax2.set_xlabel('sample\'s number')
+-ax2.set_ylabel('count of 1')
+-ax2.set_title('Number of successes (p = 0.8)')
++ax2.set_xlabel('номер выборки')
++ax2.set_ylabel('число единиц')
++ax2.set_title('Число успехов (вероятность p = 0.8)')
+ 
+ # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
+ text025 = ax0.text(50, 19, '') # , transform=plt.gcf().transFigure
+@@ -88,11 +88,11 @@ for i in range(X_RANGE):
+ 
+     if (i < 100) or (i == X_RANGE - 1):
+         text025.set_text(f'{i}: {sample025}')
+-        text025_1.set_text(f'Number of "1": {sample025.count(1)}')
++        text025_1.set_text(f'Число "единиц": {sample025.count(1)}')
+         text05.set_text(f'{i}: {sample05}')
+-        text05_1.set_text(f'Number of "1": {sample05.count(1)}')
++        text05_1.set_text(f'Число "единиц": {sample05.count(1)}')
+         text075.set_text(f'{i}: {sample075}')
+-        text075_1.set_text(f'Number of "1": {sample075.count(1)}')
++        text075_1.set_text(f'Число "единиц": {sample075.count(1)}')
+ 
+         line025.set_data(distr025.index.values, distr025['count'].values)
+         line05.set_data(distr05.index.values, distr05['count'].values)
+@@ -103,9 +103,9 @@ for i in range(X_RANGE):
+         bins075 = distr075["count"].max() - distr075["count"].min()
+ 
+         ax3.cla()
+-        ax3.hist(distr025.values, bins = bins025 if bins025 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='sample 20 0.1')
+-        ax3.hist(distr05.values, bins = bins05 if bins05 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='sample 20 0.5')
+-        ax3.hist(distr075.values, bins = bins075 if bins075 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='sample 20 0.8')
++        ax3.hist(distr025.values, bins = bins025 if bins025 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label='выборка 20 0.1')
++        ax3.hist(distr05.values, bins = bins05 if bins05 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label='выборка 20 0.5')
++        ax3.hist(distr075.values, bins = bins075 if bins075 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label='выборка 20 0.8')
+         ax3.plot(X_025, PPF_025, marker='o', linestyle='dashed', alpha=1.0, color='r', linewidth=2.0)
+         ax3.plot(X_05, PPF_05, marker='o', linestyle='dashed', alpha=1.0, color='g', linewidth=2.0)
+         ax3.plot(X_075, PPF_075, marker='o', linestyle='dashed', alpha=1.0, color='b', linewidth=2.0)
+diff --git a/distribution-chi-squared.py b/distribution-chi-squared.py
+index 3410534..794a56f 100644
+--- a/distribution-chi-squared.py
++++ b/distribution-chi-squared.py
+@@ -28,11 +28,14 @@ ax12 = plt.subplot2grid((9, 6), (3, 4), rowspan=3, colspan=2)
+ ax2 = plt.subplot2grid((9, 6), (6, 0), rowspan=3, colspan=6)
+ 
+ ax00.grid(axis='both', linestyle='--', color='0.95')
+-ax00.set_title(f'Normal Randoms (degrees of freedom = {DF_1})')
++ax00.set_title(f'Случайная величина из стандартного распределения (df = {DF_1})')
++ax00.title.set_size(10)
+ ax01.grid(axis='both', linestyle='--', color='0.95')
+-ax01.set_title(f'Normal Randoms (degrees of freedom = {DF_2})')
++ax01.set_title(f'Случайная величина из стандартного распределения (df = {DF_2})')
++ax01.title.set_size(10)
+ ax02.grid(axis='both', linestyle='--', color='0.95')
+-ax02.set_title(f'Normal Randoms (degrees of freedom = {DF_3})')
++ax02.set_title(f'Случайная величина из стандартного распределения (df = {DF_3})')
++ax02.title.set_size(10)
+ 
+ ax10.grid(axis='both', linestyle='--', color='0.95')
+ ax10.set_xlim(0, X_RANGE)
+@@ -147,9 +150,9 @@ for i in range(X_RANGE):
+         bins2 = int(max(chis_2) - min(chis_2)) + 1
+ 
+         ax2.cla()
+-        ax2.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'degrees of freedom = {DF_1}')
+-        ax2.hist(chis_1, bins = bins1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'degrees of freedom = {DF_2}')
+-        ax2.hist(chis_2, bins = bins2, density=True, rwidth=0.4, alpha=0.8, color='b', label=f'degrees of freedom = {DF_3}')
++        ax2.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'число степеней свободы df = {DF_1}')
++        ax2.hist(chis_1, bins = bins1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'число степеней свободы df = {DF_2}')
++        ax2.hist(chis_2, bins = bins2, density=True, rwidth=0.4, alpha=0.8, color='b', label=f'число степеней свободы df = {DF_3}')
+         ax2.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
+         ax2.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
+         ax2.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
+diff --git a/distribution-exponential.py b/distribution-exponential.py
+index d501143..5cda2c7 100644
+--- a/distribution-exponential.py
++++ b/distribution-exponential.py
+@@ -30,23 +30,23 @@ ax3 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
+ ax1.grid(axis='both', linestyle='--', color='0.95')
+ ax1.set_xlim(0, X_RANGE**2 * P1) 
+ ax1.set_ylim(0, YLIM1) 
+-ax1.set_xlabel('number of measures')
+-ax1.set_ylabel('time between successes')
+-ax1.set_title(f'Time between the successes (p = {P1})')
++ax1.set_xlabel('количество измерений времени')
++ax1.set_ylabel('время между "успехами"')
++ax1.set_title(f'Время между успехами (вероятность p = {P1})')
+ 
+ ax2.grid(axis='both', linestyle='--', color='0.95')
+ ax2.set_xlim(0, X_RANGE**2 * P2) 
+ ax2.set_ylim(0, YLIM2) 
+-ax2.set_xlabel('number of measures')
+-ax2.set_ylabel('time between successes')
+-ax2.set_title(f'Time between the successes (p = {P2})')
++ax2.set_xlabel('количество измерений времени')
++ax2.set_ylabel('время между "успехами"')
++ax2.set_title(f'Время между успехами (вероятность p = {P2})')
+ 
+ ax3.grid(axis='both', linestyle='--', color='0.95')
+ ax3.set_xlim(0, X_RANGE**2 * P3) 
+ ax3.set_ylim(0, YLIM3)
+-ax3.set_xlabel('number of measures')
+-ax3.set_ylabel('time between successes')
+-ax3.set_title(f'Time between the successes (p = {P3})')
++ax3.set_xlabel('количество измерений времени')
++ax3.set_ylabel('время между "успехами"')
++ax3.set_title(f'Время между успехами (вероятность p = {P3})')
+ 
+ # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
+ text_1 = ax1.text(50, YLIM1 * 0.9, '', color='r', fontweight='bold') # , transform=plt.gcf().transFigure
+@@ -113,9 +113,9 @@ for i in range(X_RANGE):
+         bins_3 = distr_3["time"].max() - distr_3["time"].min()
+ 
+         ax4.cla()
+-        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.4, alpha=0.8, color='r', label=f'sample {Y_RANGE} {P1}')
+-        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'sample {Y_RANGE} {P2}')
+-        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {Y_RANGE} {P3}')
++        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.4, alpha=0.8, color='r', label=f'выборка {Y_RANGE} {P1}')
++        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'выборка {Y_RANGE} {P2}')
++        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'выборка {Y_RANGE} {P3}')
+         ax4.plot(X, PDF_1, alpha=1.0, color='r', linewidth=2.0)
+         ax4.plot(X, PDF_2, alpha=1.0, color='g', linewidth=2.0)
+         ax4.plot(X, PDF_3, alpha=1.0, color='b', linewidth=2.0)
+diff --git a/distribution-hypergeometric.py b/distribution-hypergeometric.py
+index 7fd7247..733e7bf 100644
+--- a/distribution-hypergeometric.py
++++ b/distribution-hypergeometric.py
+@@ -46,23 +46,23 @@ ax3 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
+ ax1.grid(axis='both', linestyle='--', color='0.95')
+ ax1.set_xlim(0, X_RANGE) 
+ ax1.set_ylim(0, CARDS_1) 
+-ax1.set_xlabel('sample\'s number')
+-ax1.set_ylabel('count of spades')
+-ax1.set_title(f'Number of Spades and Hearts (n = {CARDS_1})')
++ax1.set_xlabel('номер выборки')
++ax1.set_ylabel('число червей и пик')
++ax1.set_title(f'Число Червей и Пик (n = {CARDS_1})')
+ 
+ ax2.grid(axis='both', linestyle='--', color='0.95')
+ ax2.set_xlim(0, X_RANGE) 
+ ax2.set_ylim(0, CARDS_2) 
+-ax2.set_xlabel('sample\'s number')
+-ax2.set_ylabel('count of spades and hearts')
+-ax2.set_title(f'Number of Spades and Hearts (n = {CARDS_2})')
++ax2.set_xlabel('номер выборки')
++ax2.set_ylabel('число червей и пик')
++ax2.set_title(f'Число Червей и Пик (n = {CARDS_2})')
+ 
+ ax3.grid(axis='both', linestyle='--', color='0.95')
+ ax3.set_xlim(0, X_RANGE) 
+ ax3.set_ylim(0, CARDS_3)
+-ax3.set_xlabel('sample\'s number')
+-ax3.set_ylabel('count of spades and hearts')
+-ax3.set_title(f'Number of Spades and Hearts (n = {CARDS_3})')
++ax3.set_xlabel('номер выборки')
++ax3.set_ylabel('число червей и пик')
++ax3.set_title(f'Число Червей и Пик (n = {CARDS_3})')
+ 
+ # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
+ text_1 = ax1.text(50, CARDS_1 * 0.9, '', color='black', fontweight='bold') # , transform=plt.gcf().transFigure
+@@ -106,11 +106,11 @@ for i in range(X_RANGE):
+ 
+     if (i < 100) or (i == X_RANGE - 1):
+         # text025.set_text(f'{i}: {sample_1}')
+-        text_1.set_text(f'Number of Spades and Hearts: {distr_1.loc[i, "count"]}')
++        text_1.set_text(f'Число Червей и Пик: {distr_1.loc[i, "count"]}')
+         # text05.set_text(f'{i}: {sample_2}')
+-        text_2.set_text(f'Number of Spades and Hearts: {distr_2.loc[i, "count"]}')
++        text_2.set_text(f'Число Червей и Пик: {distr_2.loc[i, "count"]}')
+         # text075.set_text(f'{i}: {sample_3}')
+-        text_3.set_text(f'Number of Spades and Hearts: {distr_3.loc[i, "count"]}')
++        text_3.set_text(f'Число Червей и Пик: {distr_3.loc[i, "count"]}')
+ 
+         line_1.set_data(distr_1.index.values, distr_1['count'].values)
+         line_2.set_data(distr_2.index.values, distr_2['count'].values)
+@@ -121,9 +121,9 @@ for i in range(X_RANGE):
+         bins_3 = distr_3["count"].max() - distr_3["count"].min()
+ 
+         ax4.cla()
+-        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'sample {CARDS_1}')
+-        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'sample {CARDS_2}')
+-        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {CARDS_3}')
++        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'выборка {CARDS_1} карт')
++        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'выборка {CARDS_2} карт')
++        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'выборка {CARDS_3} карт')
+         ax4.plot(X_1, PMF_1, marker='o', linestyle='dashed', alpha=1.0, color='r', linewidth=2.0)
+         ax4.plot(X_2, PMF_2, marker='o', linestyle='dashed', alpha=1.0, color='g', linewidth=2.0)
+         ax4.plot(X_3, PMF_3, marker='o', linestyle='dashed', alpha=1.0, color='b', linewidth=2.0)
+diff --git a/distribution-normal.py b/distribution-normal.py
+index 010d1a9..aa28a3b 100644
+--- a/distribution-normal.py
++++ b/distribution-normal.py
+@@ -61,9 +61,9 @@ N00, bins00, patches00 = axes[0,0].hist(
+     bins = BINS,
+     density=True,
+     rwidth=0.8,
+-    label='Data Density'
++    label='Плотность распределения данных'
+ )
+-axes[0,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
++axes[0,0].text(100_000, 0.00001, f'Среднее популяции (μ) = {mean:.0f}\nСтандартное отклонение (σ) = {std:.0f}')
+ 
+ ####### [1,0] #######
+ N10, bins10, patches10 = axes[1,0].hist(
+@@ -71,29 +71,29 @@ N10, bins10, patches10 = axes[1,0].hist(
+     bins = BINS,
+     density=True,
+     rwidth=0.8, 
+-    label='Data Density'
++    label='Плотность распределения данных'
+ )
+-axes[1,0].text(125_000, 0.00001, f'Population Mean (μ) = {mean:.0f}\nStandard Deviation (σ) = {std:.0f}')
++axes[1,0].text(100_000, 0.00001, f'Среднее популяции (μ) = {mean:.0f}\nСтандартное отклонение (σ) = {std:.0f}')
+ 
+ ####### [0,1] #######
+-line05, = axes[0,1].plot([], color='r', label='Sample Mean (n=5)') 
++line05, = axes[0,1].plot([], color='r', label='Среднее выборки x̄ (n=5)') 
+ # https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+ axes[0,1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+ axes[0,1].set_xlim(0, 1000) 
+ axes[0,1].set_ylim(0, raw_data.max()) 
+ 
+ text05 = axes[0,1].text(25, 4*raw_data.max()/5, f'')
+-text05_SE = axes[0,1].text(25, 5_000, f'Standard Error (SE5) = {se_05:.2f}')
++text05_SE = axes[0,1].text(25, 5_000, f'Стандартная ошибка (SE5) = {se_05:.2f}')
+ 
+ ####### [1,1] #######
+-line20, = axes[1,1].plot([], color='g', label='Sample Mean (n=20)') 
++line20, = axes[1,1].plot([], color='g', label='Среднее выборки x̄ (n=20)') 
+ # https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+ axes[1,1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+ axes[1,1].set_xlim(0, 1000) 
+ axes[1,1].set_ylim(0, raw_data.max()) 
+ 
+ text20 = axes[1,1].text(25, 4*raw_data.max()/5, f'')
+-text20_SE = axes[1,1].text(25, 5_000, f'Standard Error (SE20) = {se_20:.2f}')
++text20_SE = axes[1,1].text(25, 5_000, f'Стандартная ошибка (SE20) = {se_20:.2f}')
+ 
+ ####### Legends #######
+ 
+@@ -142,20 +142,20 @@ for i in range(1000):
+ 
+     # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
+     text05.set_text(f'' 
+-                    + f'Sample {i}: {str(sample_05.values)} \n' 
+-                    + f'Sample mean (x̄): {sample_05.mean()}'
++                    + f'Выборка {i}: {str(sample_05.values)} \n' 
++                    + f'Среднее выборки (x̄): {sample_05.mean()}'
+     )
+     text20.set_text(f'' 
+-                    + f'Sample {i}: \n' # {str(sample_20.values)}
+-                    + f'Sample mean (x̄): {sample_20.mean()}'
++                    + f'Выборка {i}: \n' # {str(sample_20.values)}
++                    + f'Среднее выборки (x̄): {sample_20.mean()}'
+     )
+     text05_SE.set_text(f'' 
+-                       + f'Standard Error (SE5) = {se_05:.2f}\n'
++                       + f'Стандартная ошибка (SE5) = {se_05:.2f}\n'
+                        # + f'Standard Deviation (s) = {sample_mean_05["mean_05"].std():.2f}\n'
+                        # + f'Standard Error Estimator = {sample_05.std() / math.sqrt(5):.2f}'
+     )
+     text20_SE.set_text(f'' 
+-                       + f'Standard Error (SE20) = {se_20:.2f}\n'
++                       + f'Стандартная ошибка (SE20) = {se_20:.2f}\n'
+                        # + f'Standard Deviation (s) = {sample_mean_20["mean_20"].std():.2f}\n'
+                        # + f'Standard Error Estimator = {sample_20.std() / math.sqrt(20):.2f}'
+     )
+@@ -165,8 +165,8 @@ for i in range(1000):
+     if (i < 100) or (i == 999):
+         ####### [2,0] #######
+         axes[2,0].cla()
+-        axes[2,0].hist(sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Density (n=5)')
+-        axes[2,0].hist(sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Density (n=20)')
++        axes[2,0].hist(sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='плотность среднего выборки (n=5)')
++        axes[2,0].hist(sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='плотность среднего выборки (n=20)')
+         axes[2,0].plot(X_05, PDF_05, alpha=1.0, color='black', linewidth=3.0)
+         axes[2,0].plot(X_20, PDF_20, alpha=1.0, color='black', linewidth=3.0)
+ 
+@@ -178,8 +178,8 @@ for i in range(1000):
+ 
+         ####### [2,1] #######
+         axes[2,1].cla()
+-        axes[2,1].hist(z_sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='Sample Mean Z-score Density (n=5)')
+-        axes[2,1].hist(z_sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='Sample Mean Z-score Density (n=20)')
++        axes[2,1].hist(z_sample_mean_05.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label='плотность Z-оценки (n=5)')
++        axes[2,1].hist(z_sample_mean_20.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label='плотность Z-оценки (n=20)')
+         axes[2,1].plot(Z_X, Z_PDF_1, alpha=1.0, color='black', linewidth=3.0)
+         axes[2,1].plot(Z_X, Z_PDF_2, alpha=1.0, color='black', linewidth=3.0)
+ 
+diff --git a/distribution-poisson.py b/distribution-poisson.py
+index 404a95f..3d61717 100644
+--- a/distribution-poisson.py
++++ b/distribution-poisson.py
+@@ -30,23 +30,23 @@ ax3 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
+ ax1.grid(axis='both', linestyle='--', color='0.95')
+ ax1.set_xlim(0, X_RANGE) 
+ ax1.set_ylim(0, YLIM1) 
+-ax1.set_xlabel('sample\'s number')
+-ax1.set_ylabel('count of 1')
+-ax1.set_title(f'Number of successes (p = {P1})')
++ax1.set_xlabel('номер выборки')
++ax1.set_ylabel('число единиц')
++ax1.set_title(f'Число успехов (вероятность p = {P1})')
+ 
+ ax2.grid(axis='both', linestyle='--', color='0.95')
+ ax2.set_xlim(0, X_RANGE) 
+ ax2.set_ylim(0, YLIM2) 
+-ax2.set_xlabel('sample\'s number')
+-ax2.set_ylabel('count of 1')
+-ax2.set_title(f'Number of successes (p = {P2})')
++ax2.set_xlabel('номер выборки')
++ax2.set_ylabel('число единиц')
++ax2.set_title(f'Число успехов (вероятность p = {P2})')
+ 
+ ax3.grid(axis='both', linestyle='--', color='0.95')
+ ax3.set_xlim(0, X_RANGE) 
+ ax3.set_ylim(0, YLIM3)
+-ax3.set_xlabel('sample\'s number')
+-ax3.set_ylabel('count of 1')
+-ax3.set_title(f'Number of successes (p = {P3})')
++ax3.set_xlabel('номер выборки')
++ax3.set_ylabel('число единиц')
++ax3.set_title(f'Число успехов (вероятность p = {P3})')
+ 
+ # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
+ text_1 = ax1.text(50, YLIM1 * 0.9, '', color='r', fontweight='bold') # , transform=plt.gcf().transFigure
+@@ -78,9 +78,9 @@ for i in range(X_RANGE):
+     distr_3.loc[i] = sample_3.count(1)
+ 
+     if (i < 100) or (i == X_RANGE - 1):
+-        text_1.set_text(f'{i}: Number of "1": {sample_1.count(1)} out of 1000')
+-        text_2.set_text(f'{i}: Number of "1": {sample_2.count(1)} out of 1000')
+-        text_3.set_text(f'{i}: Number of "1": {sample_3.count(1)} out of 1000')
++        text_1.set_text(f'{i}: Число "единиц": {sample_1.count(1)} out of 1000')
++        text_2.set_text(f'{i}: Число "единиц": {sample_2.count(1)} out of 1000')
++        text_3.set_text(f'{i}: Число "единиц": {sample_3.count(1)} out of 1000')
+ 
+         line_1.set_data(distr_1.index.values, distr_1['count'].values)
+         line_2.set_data(distr_2.index.values, distr_2['count'].values)
+@@ -100,9 +100,9 @@ for i in range(X_RANGE):
+         bins_3 = distr_3["count"].max() - distr_3["count"].min()
+ 
+         ax4.cla()
+-        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'sample {Y_RANGE} {P1}')
+-        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'sample {Y_RANGE} {P2}')
+-        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {Y_RANGE} {P3}')
++        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'выборка {Y_RANGE} {P1}')
++        ax4.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'выборка {Y_RANGE} {P2}')
++        ax4.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'выборка {Y_RANGE} {P3}')
+         ax4.plot(X, PMF_1, marker='o', linestyle='dashed', alpha=1.0, color='r', linewidth=2.0)
+         ax4.plot(X, PMF_2, marker='o', linestyle='dashed', alpha=1.0, color='g', linewidth=2.0)
+         ax4.plot(X, PMF_3, marker='o', linestyle='dashed', alpha=1.0, color='b', linewidth=2.0)
+diff --git a/distribution-t.py b/distribution-t.py
+index 6b71671..04d53e9 100644
+--- a/distribution-t.py
++++ b/distribution-t.py
+@@ -85,7 +85,7 @@ N00, bins00, patches00 = ax00.hist(
+     rwidth=0.8,
+     label='Data Density'
+ )
+-ax00.text(90_000, 0.000015, f'Population Mean (μ) = {mean:.0f}')
++ax00.text(90_000, 0.000015, f'Среднее популяции (μ) = {mean:.0f}')
+ ax00.xaxis.set_major_locator(ticker.MultipleLocator(30_000))
+ 
+ ####### [1,0] #######
+@@ -96,11 +96,11 @@ N10, bins10, patches10 = ax10.hist(
+     rwidth=0.8, 
+     label='Data Density'
+ )
+-ax10.text(90_000, 0.000015, f'Population Mean (μ) = {mean:.0f}')
++ax10.text(90_000, 0.000015, f'Среднее популяции (μ) = {mean:.0f}')
+ ax10.xaxis.set_major_locator(ticker.MultipleLocator(30_000))
+ 
+ ####### [0,1] #######
+-line_1, = ax01.plot([], color='r', label='Sample Mean (n=3)')
++line_1, = ax01.plot([], color='r', label='Среднее выборки x̄ (n=3)')
+ # https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+ ax01.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+ ax01.set_xlim(0, 1000) 
+@@ -118,7 +118,7 @@ ax02.set_ylim(0, STD_ERR_LIMIT_1)
+ text_1_SEE = ax02.text(25, STD_ERR_LIMIT_1 * 0.9, f'')
+ 
+ ####### [1,1] #######
+-line_2, = ax11.plot([], color='g', label='Sample Mean (n=50)')
++line_2, = ax11.plot([], color='g', label='Среднее выборки x̄ (n=50)')
+ # https://stackoverflow.com/questions/57093572/set-y-axis-to-scientific-notation
+ ax11.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+ ax11.set_xlim(0, 1000) 
+@@ -184,22 +184,22 @@ for i in range(1000):
+ 
+     # https://stackoverflow.com/questions/39223286/how-to-refresh-text-in-matplotlib
+     text_1.set_text(f'' 
+-                    + f'Sample {i}: {str(sample_1.values)}\n' 
+-                    + f'Sample mean (x̄): {sample_1.mean()}'
++                    + f'Выборка {i}: {str(sample_1.values)}\n' 
++                    + f'Среднее выборки (x̄): {sample_1.mean()}'
+     )
+     text_2.set_text(f'' 
+-                    + f'Sample {i}: \n' 
+-                    + f'Sample mean (x̄): {sample_2.mean()}'
++                    + f'Выборка {i}: \n' 
++                    + f'Среднее выборки (x̄): {sample_2.mean()}'
+     )
+     text_1_SEE.set_text(f'' 
+                         # Standard Deviation of the entire set of Sample Means
+                         # + f'Standard Deviation (s) = {sample_mean_1["mean"].std():.2f}\n'
+-                        + f'Standard Error Estimator (SEE03) = {see_1:.2f}'
++                        + f'Оценка средней ошибки (SEE03) = {see_1:.2f}'
+     )
+     text_2_SEE.set_text(f'' 
+                         # Standard Deviation of the entire set of Sample Means
+                         # + f'Standard Deviation (s) = {sample_mean_2["mean"].std():.2f}\n' 
+-                        + f'Standard Error Estimator (SEE50) = {see_2:.2f}'
++                        + f'Оценка средней ошибки (SEE50) = {see_2:.2f}'
+     )
+ 
+     # https://en.wikipedia.org/wiki/Student%27s_t-test#One-sample_t-test
+@@ -235,8 +235,8 @@ for i in range(1000):
+     if (i < 100) or (i == 999): # 
+         ####### [2,0] #######
+         ax20.cla()
+-        ax20.hist(sample_mean_1.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'Sample Mean Density (n={SAMPLE_SIZE_1})')
+-        ax20.hist(sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'Sample Mean Density (n={SAMPLE_SIZE_2})')
++        ax20.hist(sample_mean_1.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'плотность среднего выборки (n={SAMPLE_SIZE_1})')
++        ax20.hist(sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'плотность среднего выборки (n={SAMPLE_SIZE_2})')
+         ax20.plot(X_1, PDF_1, alpha=1.0, color='black', linewidth=2.0)
+         ax20.plot(X_2, PDF_2, alpha=1.0, color='purple', linewidth=2.0)
+ 
+@@ -248,8 +248,8 @@ for i in range(1000):
+         ax20.ticklabel_format(axis='y', style='sci', scilimits=(0, 0))
+         ####### [2,1] #######
+         ax21.cla()
+-        ax21.hist(t_sample_mean_1.values, bins = 80, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'Sample Mean T-score Density (n={SAMPLE_SIZE_1})')
+-        ax21.hist(t_sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'Sample Mean T-score Density (n={SAMPLE_SIZE_2})')
++        ax21.hist(t_sample_mean_1.values, bins = 80, density=True, rwidth=0.9, alpha=0.8, color='r', label=f'плотность T-оценки (n={SAMPLE_SIZE_1})')
++        ax21.hist(t_sample_mean_2.values, bins = 20, density=True, rwidth=0.9, alpha=0.8, color='g', label=f'плотность T-оценки (n={SAMPLE_SIZE_2})')
+         ax21.plot(T_X_1, T_PDF_1, alpha=1.0, color='black', linewidth=2.0)
+         ax21.plot(T_X_2, T_PDF_2, alpha=1.0, color='purple', linewidth=2.0)
+ 
