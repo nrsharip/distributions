@@ -117,8 +117,8 @@ for i in range(X_RANGE):
         ax4.cla()
         ax5.cla()
         ax6.cla()
-        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.4, alpha=0.8, color='r', label=f'sample {Y_RANGE} {P1}')
-        ax5.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'sample {Y_RANGE} {P2}')
+        ax4.hist(distr_1.values, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'sample {Y_RANGE} {P1}')
+        ax5.hist(distr_2.values, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'sample {Y_RANGE} {P2}')
         ax6.hist(distr_3.values, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {Y_RANGE} {P3}')
         ax4.plot(X, PDF_1, alpha=1.0, color='r', linewidth=2.0)
         ax5.plot(X, PDF_2, alpha=1.0, color='g', linewidth=2.0)
@@ -126,7 +126,7 @@ for i in range(X_RANGE):
     
         ax4.grid(axis='both', linestyle='--', color='0.95')
         ax4.xaxis.set_major_locator(ticker.MultipleLocator(int(YLIM1 / 10)))
-        ax4.set_xlim(0, YLIM1)
+        ax4.set_xlim(0, YLIM1 / 2)
         # ax3.set_ylim(0, 1)
         # ax3.set_xlabel('')
         # ax3.set_ylabel('')
@@ -135,12 +135,12 @@ for i in range(X_RANGE):
 
         ax5.grid(axis='both', linestyle='--', color='0.95')
         ax5.xaxis.set_major_locator(ticker.MultipleLocator(int(YLIM2 / 10)))
-        ax5.set_xlim(0, YLIM2)
+        ax5.set_xlim(0, YLIM2 / 2)
         ax5.legend(loc="upper right")
 
         ax6.grid(axis='both', linestyle='--', color='0.95')
         ax6.xaxis.set_major_locator(ticker.MultipleLocator(int(YLIM3 / 10)))
-        ax6.set_xlim(0, YLIM3)
+        ax6.set_xlim(0, YLIM3 / 2)
         ax6.legend(loc="upper right")
 
         ax4.text(10, 0.04, f'Exp(1/λ = {mean_1:.4f})')
