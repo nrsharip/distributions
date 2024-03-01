@@ -25,7 +25,9 @@ ax10 = plt.subplot2grid((9, 6), (3, 0), rowspan=3, colspan=2)
 ax11 = plt.subplot2grid((9, 6), (3, 2), rowspan=3, colspan=2)
 ax12 = plt.subplot2grid((9, 6), (3, 4), rowspan=3, colspan=2)
 
-ax2 = plt.subplot2grid((9, 6), (6, 0), rowspan=3, colspan=6)
+ax20 = plt.subplot2grid((9, 6), (6, 0), rowspan=3, colspan=2)
+ax21 = plt.subplot2grid((9, 6), (6, 2), rowspan=3, colspan=2)
+ax22 = plt.subplot2grid((9, 6), (6, 4), rowspan=3, colspan=2)
 
 ax00.grid(axis='both', linestyle='--', color='0.95')
 ax00.set_title(f'Normal Randoms (degrees of freedom = {DF_1})')
@@ -146,23 +148,35 @@ for i in range(X_RANGE):
         bins1 = int(max(chis_1) - min(chis_1)) + 1
         bins2 = int(max(chis_2) - min(chis_2)) + 1
 
-        ax2.cla()
-        ax2.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'degrees of freedom = {DF_1}')
-        ax2.hist(chis_1, bins = bins1, density=True, rwidth=0.6, alpha=0.6, color='g', label=f'degrees of freedom = {DF_2}')
-        ax2.hist(chis_2, bins = bins2, density=True, rwidth=0.4, alpha=0.8, color='b', label=f'degrees of freedom = {DF_3}')
-        ax2.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
-        ax2.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
-        ax2.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
+        ax20.cla()
+        ax21.cla()
+        ax22.cla()
+        ax20.hist(chis_0, bins = bins0, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'degrees of freedom = {DF_1}')
+        ax21.hist(chis_1, bins = bins1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'degrees of freedom = {DF_2}')
+        ax22.hist(chis_2, bins = bins2, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'degrees of freedom = {DF_3}')
+        ax20.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
+        ax21.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
+        ax22.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
 
-        ax2.grid(axis='both', linestyle='--', color='0.95')
-        ax2.xaxis.set_major_locator(ticker.MultipleLocator(1))
-        ax2.set_xlim(0, max(max(chis_0), max(chis_1), max(chis_2)))
+        ax20.grid(axis='both', linestyle='--', color='0.95')
+        ax20.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax20.set_xlim(0, max(chis_0))
 
-        ax2.text(0.5, 0.42, f'χ²(k={DF_1})')
-        ax2.text(3, 0.2, f'χ²(k={DF_2})')
-        ax2.text(6, 0.14, f'χ²(k={DF_3})')
+        ax21.grid(axis='both', linestyle='--', color='0.95')
+        ax21.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax21.set_xlim(0, max(chis_1))
 
-        ax2.legend(loc="upper right")
+        ax22.grid(axis='both', linestyle='--', color='0.95')
+        ax22.xaxis.set_major_locator(ticker.MultipleLocator(1))
+        ax22.set_xlim(0, max(chis_2))
+
+        ax20.text(2, 0.2, f'χ²(k={DF_1})')
+        ax21.text(5, 0.1, f'χ²(k={DF_2})')
+        ax22.text(12, 0.05, f'χ²(k={DF_3})')
+
+        ax20.legend(loc="upper right")
+        ax21.legend(loc="upper right")
+        ax22.legend(loc="upper right")
 
         plt.tight_layout()
         plt.pause(0.05)
