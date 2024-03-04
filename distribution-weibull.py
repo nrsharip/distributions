@@ -50,22 +50,25 @@ ax1.grid(axis='both', linestyle='--', color='0.95')
 ax1.set_xlim(0, Y_RANGE * LAMBDA_1) 
 ax1.set_ylim(0, YLIM1)
 ax1.set_xlabel('number of measures')
-ax1.set_ylabel('time between successes')
-ax1.set_title(f'Time between the successes (p = {P1})')
+ax1.set_ylabel(f'time between successes of power k={K_1:.2f}')
+ax1.set_title(f'Time between the successes of power k={K_1:.2f} (p = {P1})')
+ax1.title.set_size(10)
 
 ax2.grid(axis='both', linestyle='--', color='0.95')
 ax2.set_xlim(0, Y_RANGE * LAMBDA_2) 
 ax2.set_ylim(0, YLIM2) 
 ax2.set_xlabel('number of measures')
-ax2.set_ylabel('time between successes')
-ax2.set_title(f'Time between the successes (p = {P2})')
+ax2.set_ylabel(f'time between successes of power k={K_2:.2f}')
+ax2.set_title(f'Time between the successes of power k={K_2:.2f} (p = {P2})')
+ax2.title.set_size(10)
 
 ax3.grid(axis='both', linestyle='--', color='0.95')
 ax3.set_xlim(0, Y_RANGE * LAMBDA_3) 
 ax3.set_ylim(0, YLIM3)
 ax3.set_xlabel('number of measures')
-ax3.set_ylabel('time between successes')
-ax3.set_title(f'Time between the successes (p = {P3})')
+ax3.set_ylabel(f'time between successes of power k={K_3:.2f}')
+ax3.set_title(f'Time between the successes of power k={K_3:.2f} (p = {P3})')
+ax3.title.set_size(10)
 
 # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
 text_1 = ax1.text(50, YLIM1 * 0.9, '', color='r', fontweight='bold') # , transform=plt.gcf().transFigure
@@ -121,6 +124,10 @@ for i in range(X_RANGE):
     distr_2, remainder2 = calc_times(sample_2, distr_2, remainder2)
     distr_3, remainder3 = calc_times(sample_3, distr_3, remainder3)
 
+    distr_1_pow_k = np.power(distr_1.values, K_1)
+    distr_2_pow_k = np.power(distr_2.values, K_2)
+    distr_3_pow_k = np.power(distr_3.values, K_3)
+
     if (i < 100) or (i == X_RANGE - 1):
         mean_1 = distr_1["time"].mean()
         mean_2 = distr_2["time"].mean()
@@ -132,9 +139,9 @@ for i in range(X_RANGE):
 
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
         # Y = X**k is weibull_min distributed with shape c = 1/k and scale s**k.
-        line_1.set_data(distr_1.index.values, np.power(distr_1.values, K_1))
-        line_2.set_data(distr_2.index.values, np.power(distr_2.values, K_2))
-        line_3.set_data(distr_3.index.values, np.power(distr_3.values, K_3))
+        line_1.set_data(distr_1.index.values, distr_1_pow_k)
+        line_2.set_data(distr_2.index.values, distr_2_pow_k)
+        line_3.set_data(distr_3.index.values, distr_3_pow_k)
 
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
         # PDF_1 = stats.weibull_min.pdf(X_1, c=1/K_1, scale = mean_1**K_1)
@@ -150,9 +157,9 @@ for i in range(X_RANGE):
         ax6.cla()
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
         # Y = X**k is weibull_min distributed with shape c = 1/k and scale s**k.
-        ax4.hist(np.power(distr_1.values, K_1), bins = bins_1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'sample {Y_RANGE} {P1}')
-        ax5.hist(np.power(distr_2.values, K_2), bins = bins_2, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'sample {Y_RANGE} {P1}')
-        ax6.hist(np.power(distr_3.values, K_3), bins = bins_3, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'sample {Y_RANGE} {P1}')
+        ax4.hist(distr_1_pow_k, bins = bins_1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'β={BETA_1:.2f} {Y_RANGE} {P1}')
+        ax5.hist(distr_2_pow_k, bins = bins_2, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'β={BETA_2:.2f} {Y_RANGE} {P2}')
+        ax6.hist(distr_3_pow_k, bins = bins_3, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'β={BETA_3:.2f} {Y_RANGE} {P3}')
         ax4.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
         ax5.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
         ax6.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
@@ -176,9 +183,9 @@ for i in range(X_RANGE):
         # ax6.set_xlim(0, YLIM3 / 2)
         ax6.legend(loc="upper right")
 
-        ax4.text(8.75, 0.125, f'W(λ={LAMBDA_1},k={BETA_1:.2f})')
-        ax5.text(80, 0.008, f'W(λ={LAMBDA_2},k={BETA_2:.2f})')
-        ax6.text(1000, 0.001, f'W(λ={LAMBDA_3},k={BETA_3:.2f})')
+        ax4.text(8.75, 0.125, f'W(λ={LAMBDA_1},β={BETA_1:.2f})')
+        ax5.text(80, 0.008, f'W(λ={LAMBDA_2},β={BETA_2:.2f})')
+        ax6.text(1000, 0.001, f'W(λ={LAMBDA_3},β={BETA_3:.2f})')
 
     (i < 100) and (i % 20 == 0) and plt.tight_layout()
 
