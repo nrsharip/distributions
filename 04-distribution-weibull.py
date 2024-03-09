@@ -8,7 +8,7 @@ import math
 import random
 
 X_RANGE = 1000 # up to 1000 hours
-Y_RANGE = 20   # up to 20 events per hour
+Y_RANGE = 1000 # up to 20 events per hour
 
 LAMBDA_1 = 1 # mean of successes, 1 success in average per the given time range
 LAMBDA_2 = 2 # mean of successes, 2 successes in average per the given time range
@@ -183,9 +183,9 @@ for i in range(X_RANGE):
         # ax6.set_xlim(0, YLIM3 / 2)
         ax6.legend(loc="upper right")
 
-        ax4.text(3.5, 0.3, f'W(λ={LAMBDA_1},β={BETA_1:.2f})')
-        ax5.text(5, 0.125, f'W(λ={LAMBDA_2},β={BETA_2:.2f})')
-        ax6.text(10, 0.05, f'W(λ={LAMBDA_3},β={BETA_3:.2f})')
+        ax4.text(15, 0.06, f'W(λ={LAMBDA_1},β={BETA_1:.2f})')
+        ax5.text(100, 0.006, f'W(λ={LAMBDA_2},β={BETA_2:.2f})')
+        ax6.text(1000, 0.0005, f'W(λ={LAMBDA_3},β={BETA_3:.2f})')
 
     (i < 100) and (i % 20 == 0) and plt.tight_layout()
 
