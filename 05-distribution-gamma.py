@@ -8,14 +8,10 @@ import math
 import random
 
 X_RANGE = 1000 # up to 1000 hours
-Y_RANGE = 10   # up to 10 events an hours
+Y_RANGE = 20   # up to 20 events an hours
 
-K_1 = 1 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
-K_2 = 2 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
-K_3 = 3 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
-
-LAMBDA_1 = 3 # mean of successes, 3 success in average per the given time range
-LAMBDA_2 = 3 # mean of successes, 2 successes in average per the given time range
+LAMBDA_1 = 1 # mean of successes, 3 successes in average per the given time range
+LAMBDA_2 = 2 # mean of successes, 2 successes in average per the given time range
 LAMBDA_3 = 3 # mean of successes, 1 successes in average per the given time range
 
 P1 = LAMBDA_1 / Y_RANGE # (ex. 1% out of 100, 0.1% out of 1000)
@@ -29,9 +25,13 @@ THETA_2 = (Y_RANGE - LAMBDA_2)/LAMBDA_2 # mean of time interval between the succ
 THETA_3 = (Y_RANGE - LAMBDA_3)/LAMBDA_3 # mean of time interval between the successes 
                                         # (ex. 3 successes in 10 means ~ 2 time interval in average)
 
-YLIM1 = 3 * (Y_RANGE) * K_1 # in case we got up to 3 empty samples in a row (all zeroes)
-YLIM2 = 2 * (Y_RANGE) * K_2 # in case we got up to 2 empty samples in a row (all zeroes)
-YLIM3 = 2 * (Y_RANGE) * K_3 # in case we got up to 1 empty samples in a row (all zeroes)
+K_1 = 3 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
+K_2 = 2 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
+K_3 = 1 # aka α - number of degrees of freedom (number of events to count the time elapsed for)
+
+YLIM1 = 6 * (Y_RANGE / LAMBDA_1) * K_1 # in case we got up to 2 empty samples in a row (all zeroes)
+YLIM2 = 6 * (Y_RANGE / LAMBDA_2) * K_2 # in case we got up to 2 empty samples in a row (all zeroes)
+YLIM3 = 6 * (Y_RANGE / LAMBDA_3) * K_3 # in case we got up to 2 empty samples in a row (all zeroes)
 
 distr_1 = pd.DataFrame(columns = ['time'])
 distr_2 = pd.DataFrame(columns = ['time'])
@@ -43,25 +43,25 @@ ax2 = plt.subplot2grid((10, 6), (0, 2), rowspan=5, colspan=2)
 ax3 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
 
 ax1.grid(axis='both', linestyle='--', color='0.95')
-ax1.set_xlim(0, X_RANGE) 
+ax1.set_xlim(0, X_RANGE / K_1) 
 ax1.set_ylim(0, YLIM1) 
 ax1.set_xlabel('number of measures')
-ax1.set_ylabel(f'time between α={K_1} successes')
-ax1.set_title(f'Time between α={K_1} successes (p = {P1})')
+ax1.set_ylabel(f'time between k={K_1} successes')
+ax1.set_title(f'Time between k={K_1} successes (p = {P1})')
 
 ax2.grid(axis='both', linestyle='--', color='0.95')
-ax2.set_xlim(0, X_RANGE) 
+ax2.set_xlim(0, X_RANGE / K_2) 
 ax2.set_ylim(0, YLIM2) 
 ax2.set_xlabel('number of measures')
-ax2.set_ylabel(f'time between α={K_2} successes')
-ax2.set_title(f'Time between α={K_2} successes (p = {P2})')
+ax2.set_ylabel(f'time between k={K_2} successes')
+ax2.set_title(f'Time between k={K_2} successes (p = {P2})')
 
 ax3.grid(axis='both', linestyle='--', color='0.95')
-ax3.set_xlim(0, X_RANGE) 
+ax3.set_xlim(0, X_RANGE / K_3) 
 ax3.set_ylim(0, YLIM3)
 ax3.set_xlabel('number of measures')
-ax3.set_ylabel(f'time between α={K_3} successes')
-ax3.set_title(f'Time between α={K_3} successes (p = {P3})')
+ax3.set_ylabel(f'time between k={K_3} successes')
+ax3.set_title(f'Time between k={K_3} successes (p = {P3})')
 
 # https://stackoverflow.com/questions/42435446/how-to-put-text-outside-of-plots
 text_1 = ax1.text(50, YLIM1 * 0.9, '', color='r', fontweight='bold') # , transform=plt.gcf().transFigure
@@ -81,11 +81,11 @@ ax1.legend(loc="upper right")
 ax2.legend(loc="upper right")
 ax3.legend(loc="upper right")
 
-X_1 = np.linspace(0, 3 * Y_RANGE * K_1, 1000) # up to 3 hours of zeros in a row for k events
-X_2 = np.linspace(0, 1 * Y_RANGE * K_2, 1000) # up to 1 hours of zeros in a row for k events
-X_3 = np.linspace(0, 1 * Y_RANGE * K_3, 1000) # up to 1 hours of zeros in a row
+X_1 = np.linspace(0, YLIM1, 1000)
+X_2 = np.linspace(0, YLIM2, 1000)
+X_3 = np.linspace(0, YLIM3, 1000)
 
-# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
+# https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.gamma.html
 PDF_1 = stats.gamma.pdf(X_1, a=K_1, scale = THETA_1)
 PDF_2 = stats.gamma.pdf(X_2, a=K_2, scale = THETA_2)
 PDF_3 = stats.gamma.pdf(X_3, a=K_3, scale = THETA_3)
@@ -130,16 +130,16 @@ for i in range(X_RANGE):
         line_2.set_data(list(range(0, len(distr_2_k))), distr_2_k)
         line_3.set_data(list(range(0, len(distr_3_k))), distr_3_k)
 
-        bins_1 = 20 
-        bins_2 = 20 
-        bins_3 = 20 
+        bins_1 = 20 # int(np.max(distr_1_k) - np.min(distr_1_k)) if len(distr_1_k) > 0 else 1
+        bins_2 = 20 # int(np.max(distr_2_k) - np.min(distr_2_k)) if len(distr_2_k) > 0 else 1
+        bins_3 = 20 # int(np.max(distr_3_k) - np.min(distr_3_k)) if len(distr_3_k) > 0 else 1
 
         ax4.cla()
         ax5.cla()
         ax6.cla()
-        ax4.hist(distr_1_k, bins = bins_1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'α={K_1:.2f} {Y_RANGE} {P1}')
-        ax5.hist(distr_2_k, bins = bins_2, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'α={K_2:.2f} {Y_RANGE} {P2}')
-        ax6.hist(distr_3_k, bins = bins_3, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'α={K_3:.2f} {Y_RANGE} {P3}')
+        ax4.hist(distr_1_k, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'k={K_1:.2f} θ={THETA_1:.2f} n={Y_RANGE} p={P1}')
+        ax5.hist(distr_2_k, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'k={K_2:.2f} θ={THETA_2:.2f} n={Y_RANGE} p={P2}')
+        ax6.hist(distr_3_k, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'k={K_3:.2f} θ={THETA_3:.2f} n={Y_RANGE} p={P3}')
         ax4.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
         ax5.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
         ax6.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
@@ -163,9 +163,9 @@ for i in range(X_RANGE):
         # ax6.set_xlim(0, YLIM3 / 2)
         ax6.legend(loc="upper right")
 
-        ax4.text(10, 0.04, f'Γ(k = {K_1:.2f}, θ = {THETA_1:.2f})')
-        ax5.text(5, 0.125, f'Γ(k = {K_2:.2f}, θ = {THETA_2:.2f})')
-        ax6.text(10, 0.06, f'Γ(k = {K_3:.2f}, θ = {THETA_3:.2f})')
+        ax4.text(100, 0.006, f'Γ(k={K_1:.2f},θ={THETA_1:.2f})')
+        ax5.text(30, 0.02, f'Γ(k={K_2:.2f},θ={THETA_2:.2f})')
+        ax6.text(10, 0.05, f'Γ(k={K_3:.2f},θ={THETA_3:.2f})')
 
     (i < 100) and (i % 20 == 0) and plt.tight_layout()
 

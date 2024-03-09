@@ -7,16 +7,8 @@ import matplotlib.ticker as ticker
 import math
 import random
 
-X_RANGE = 1000 # up to 100 days
-Y_RANGE = 1000 # up to 100 events a day
-
-BETA_1 = 3.5
-BETA_2 = 1.5 
-BETA_3 = 0.9 
-
-K_1 = 1/BETA_1
-K_2 = 1/BETA_2
-K_3 = 1/BETA_3
+X_RANGE = 1000 # up to 1000 hours
+Y_RANGE = 20   # up to 20 events per hour
 
 LAMBDA_1 = 1 # mean of successes, 1 success in average per the given time range
 LAMBDA_2 = 2 # mean of successes, 2 successes in average per the given time range
@@ -33,9 +25,17 @@ THETA_2 = (Y_RANGE - LAMBDA_2)/LAMBDA_2 # mean of time interval between the succ
 THETA_3 = (Y_RANGE - LAMBDA_3)/LAMBDA_3 # mean of time interval between the successes 
                                         # (ex. 3 successes in 1000 means ~ 332 time interval in average)
 
-YLIM1 = 5 * (Y_RANGE ** K_1) # in case we got up to 5 empty samples in a row (all zeroes)
-YLIM2 = 4 * (Y_RANGE ** K_2) # in case we got up to 4 empty samples in a row (all zeroes)
-YLIM3 = 3 * (Y_RANGE ** K_3) # in case we got up to 3 empty samples in a row (all zeroes)
+BETA_1 = 3.0
+BETA_2 = 1.5 
+BETA_3 = 0.9 
+
+K_1 = 1/BETA_1
+K_2 = 1/BETA_2
+K_3 = 1/BETA_3
+
+YLIM1 = 3 * (Y_RANGE / LAMBDA_1)**K_1 # up to 3 zero samples in a row and 1 success per sample in average - time in K_1 power
+YLIM2 = 4 * (Y_RANGE / LAMBDA_2)**K_2 # up to 4 zero samples in a row and 2 successes per sample in average - time in K_2 power
+YLIM3 = 5 * (Y_RANGE / LAMBDA_3)**K_3 # up to 5 zero samples in a row and 3 successes per sample in average - time in K_3 power
 
 distr_1 = pd.DataFrame(columns = ['time'])
 distr_2 = pd.DataFrame(columns = ['time'])
@@ -47,7 +47,7 @@ ax2 = plt.subplot2grid((10, 6), (0, 2), rowspan=5, colspan=2)
 ax3 = plt.subplot2grid((10, 6), (0, 4), rowspan=5, colspan=2)
 
 ax1.grid(axis='both', linestyle='--', color='0.95')
-ax1.set_xlim(0, Y_RANGE * LAMBDA_1) 
+ax1.set_xlim(0, X_RANGE * LAMBDA_1) 
 ax1.set_ylim(0, YLIM1)
 ax1.set_xlabel('number of measures')
 ax1.set_ylabel(f'time between successes of power k={K_1:.2f}')
@@ -55,7 +55,7 @@ ax1.set_title(f'Time between the successes of power k={K_1:.2f} (p = {P1})')
 ax1.title.set_size(10)
 
 ax2.grid(axis='both', linestyle='--', color='0.95')
-ax2.set_xlim(0, Y_RANGE * LAMBDA_2) 
+ax2.set_xlim(0, X_RANGE * LAMBDA_2) 
 ax2.set_ylim(0, YLIM2) 
 ax2.set_xlabel('number of measures')
 ax2.set_ylabel(f'time between successes of power k={K_2:.2f}')
@@ -63,7 +63,7 @@ ax2.set_title(f'Time between the successes of power k={K_2:.2f} (p = {P2})')
 ax2.title.set_size(10)
 
 ax3.grid(axis='both', linestyle='--', color='0.95')
-ax3.set_xlim(0, Y_RANGE * LAMBDA_3) 
+ax3.set_xlim(0, X_RANGE * LAMBDA_3) 
 ax3.set_ylim(0, YLIM3)
 ax3.set_xlabel('number of measures')
 ax3.set_ylabel(f'time between successes of power k={K_3:.2f}')
@@ -88,14 +88,16 @@ ax1.legend(loc="upper right")
 ax2.legend(loc="upper right")
 ax3.legend(loc="upper right")
 
-X_1 = np.linspace(0, int(YLIM1 / 2), 10 * int(YLIM1))
-X_2 = np.linspace(0, int(YLIM2 / 2), 10 * int(YLIM2))
-X_3 = np.linspace(0.001, int(YLIM3 / 2), 10 * int(YLIM3))
+X_1 = np.linspace(0, YLIM1, 1000)
+X_2 = np.linspace(0, YLIM2, 1000)
+X_3 = np.linspace(0, YLIM3, 1000)
 
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
-PDF_1 = stats.weibull_min.pdf(X_1, c=1/K_1, scale = THETA_1**K_1)
-PDF_2 = stats.weibull_min.pdf(X_2, c=1/K_2, scale = THETA_2**K_2)
-PDF_3 = stats.weibull_min.pdf(X_3, c=1/K_3, scale = THETA_3**K_3)
+# Suppose X is an exponentially distributed random variable with scale s. 
+# Then Y = X**k is weibull_min distributed with shape c = 1/k and scale s**k.
+PDF_1 = stats.weibull_min.pdf(X_1, c=BETA_1, scale = THETA_1**K_1)
+PDF_2 = stats.weibull_min.pdf(X_2, c=BETA_2, scale = THETA_2**K_2)
+PDF_3 = stats.weibull_min.pdf(X_3, c=BETA_3, scale = THETA_3**K_3)
 
 # 1 0 0 0 1 0 0 0 0 0 0 0 0 1 0 0 0 0 1
 # Number of successes: 4
@@ -124,6 +126,9 @@ for i in range(X_RANGE):
     distr_2, remainder2 = calc_times(sample_2, distr_2, remainder2)
     distr_3, remainder3 = calc_times(sample_3, distr_3, remainder3)
 
+    # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
+    # Suppose X is an exponentially distributed random variable with scale s. 
+    # Then Y = X**k is weibull_min distributed with shape c = 1/k and scale s**k.
     distr_1_pow_k = np.power(distr_1.values, K_1)
     distr_2_pow_k = np.power(distr_2.values, K_2)
     distr_3_pow_k = np.power(distr_3.values, K_3)
@@ -143,23 +148,18 @@ for i in range(X_RANGE):
         line_2.set_data(distr_2.index.values, distr_2_pow_k)
         line_3.set_data(distr_3.index.values, distr_3_pow_k)
 
-        # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
-        # PDF_1 = stats.weibull_min.pdf(X_1, c=1/K_1, scale = mean_1**K_1)
-        # PDF_2 = stats.weibull_min.pdf(X_2, c=1/K_2, scale = mean_2**K_2)
-        # PDF_3 = stats.weibull_min.pdf(X_3, c=1/K_3, scale = mean_3**K_3)
-
-        bins_1 = 20
-        bins_2 = 40
-        bins_3 = 60
+        bins_1 = 20 # int(distr_1_pow_k.max() - distr_1_pow_k.min()) if len(distr_1_pow_k) > 0 else 1
+        bins_2 = 20 # int(distr_2_pow_k.max() - distr_2_pow_k.min()) if len(distr_2_pow_k) > 0 else 1
+        bins_3 = 20 # int(distr_3_pow_k.max() - distr_3_pow_k.min()) if len(distr_3_pow_k) > 0 else 1
 
         ax4.cla()
         ax5.cla()
         ax6.cla()
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.weibull_min.html
         # Y = X**k is weibull_min distributed with shape c = 1/k and scale s**k.
-        ax4.hist(distr_1_pow_k, bins = bins_1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'β={BETA_1:.2f} {Y_RANGE} {P1}')
-        ax5.hist(distr_2_pow_k, bins = bins_2, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'β={BETA_2:.2f} {Y_RANGE} {P2}')
-        ax6.hist(distr_3_pow_k, bins = bins_3, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'β={BETA_3:.2f} {Y_RANGE} {P3}')
+        ax4.hist(distr_1_pow_k, bins = bins_1 if bins_1 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='r', label=f'λ={LAMBDA_1:.2f} β={BETA_1:.2f} n={Y_RANGE} p={P1}')
+        ax5.hist(distr_2_pow_k, bins = bins_2 if bins_2 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='g', label=f'λ={LAMBDA_2:.2f} β={BETA_2:.2f} n={Y_RANGE} p={P2}')
+        ax6.hist(distr_3_pow_k, bins = bins_3 if bins_3 > 0 else 1, density=True, rwidth=0.8, alpha=0.4, color='b', label=f'λ={LAMBDA_3:.2f} β={BETA_3:.2f} n={Y_RANGE} p={P3}')
         ax4.plot(X_1, PDF_1, alpha=1.0, color='r', linewidth=2.0)
         ax5.plot(X_2, PDF_2, alpha=1.0, color='g', linewidth=2.0)
         ax6.plot(X_3, PDF_3, alpha=1.0, color='b', linewidth=2.0)
@@ -183,9 +183,9 @@ for i in range(X_RANGE):
         # ax6.set_xlim(0, YLIM3 / 2)
         ax6.legend(loc="upper right")
 
-        ax4.text(8.75, 0.125, f'W(λ={LAMBDA_1},β={BETA_1:.2f})')
-        ax5.text(80, 0.008, f'W(λ={LAMBDA_2},β={BETA_2:.2f})')
-        ax6.text(1000, 0.001, f'W(λ={LAMBDA_3},β={BETA_3:.2f})')
+        ax4.text(3.5, 0.3, f'W(λ={LAMBDA_1},β={BETA_1:.2f})')
+        ax5.text(5, 0.125, f'W(λ={LAMBDA_2},β={BETA_2:.2f})')
+        ax6.text(10, 0.05, f'W(λ={LAMBDA_3},β={BETA_3:.2f})')
 
     (i < 100) and (i % 20 == 0) and plt.tight_layout()
 
